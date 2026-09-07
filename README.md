@@ -1,6 +1,4 @@
-# 🧼💰 VPB HigiLucro - Aplicativo de Higienização & Cálculo de Lucro
-
-**VPB HigiLucro** é um aplicativo mobile progressivo (PWA) de altíssima simplicidade visual, projetado especialmente para profissionais e autônomos do ramo de higienização de estofados, colchões, artigos infantis e estética automotiva.
+# 🧼💰 FOGO GESTÃO é um aplicativo PWA intuitivo para profissionais de higienização de estofados. Calcula custos por ml de produtos químicos, combustível e maquinário, analisa a margem de lucro real, gera orçamentos formatados para WhatsApp com fotos e gerencia a agenda de atendimentos. Funciona 100% no celular com login por CPF/CNPJ sem senha.
 
 ---
 
