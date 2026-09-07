@@ -1,0 +1,22 @@
+{
+  "name": "VPB HigiLucro - Higienização Simples",
+  "short_name": "VPB HigiLucro",
+  "description": "Calculadora de Custos, Orçamentos WhatsApp e Agenda para Profissionais de Higienização de Estofados.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0284c7",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2972/2972531.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2972/2972531.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
