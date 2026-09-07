@@ -1,7 +1,7 @@
 {
-  "name": "VPB HigiLucro - Higienização Simples",
-  "short_name": "VPB HigiLucro",
-  "description": "Calculadora de Custos, Orçamentos WhatsApp e Agenda para Profissionais de Higienização de Estofados.",
+  "name": "Foco Gestao - Higienizacao de Estofados",
+  "short_name": "Foco Gestao",
+  "description": "Calculadora de Custos, OrÃ§amentos WhatsApp e Agenda para Profissionais de HigienizaÃ§Ã£o de Estofados.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
