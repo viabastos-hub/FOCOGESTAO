@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -43,36 +43,37 @@
       <div class="w-12 h-12 rounded-2xl bg-sky-500 animate-bounce flex items-center justify-center font-black text-slate-950 text-xl shadow-lg shadow-sky-500/50">
         VPB
       </div>
-      <p class="mt-4 text-sm text-slate-400 font-medium">Carregando VPB HigiLucro...</p>
+      <p class="mt-4 text-base text-slate-300 font-bold">Carregando VPB HigiLucro...</p>
     </div>
   </div>
 
   <script>
 /**
- * VPB HigiLucro - Aplicativo de GestÃ£o e CÃ¡lculos para HigienizaÃ§Ã£o de Estofados
- * Desenvolvido para mÃ¡xima simplicidade visual em celulares.
+ * VPB HigiLucro - Aplicativo de Gestão e Cálculos para Higienização de Estofados
+ * Desenvolvido para máxima simplicidade visual e LEITURA FÁCIL em celulares.
  */
 
 // Key para armazenar dados no LocalStorage
-const STORAGE_KEY = 'VPB_HIGILUCRO_DATA_V2';
+const STORAGE_KEY = 'VPB_HIGILUCRO_DATA_V4';
 
-// Estado inicial com exemplos prÃ¡ticos prÃ©-carregados
+// Estado inicial com exemplos práticos pré-carregados
 const defaultState = {
   activeTab: 'calculadora', // 'produtos', 'calculadora', 'orcamentos', 'agenda', 'dicas'
   usuario: {
     logado: false,
     nome: '',
-    documento: '', // CPF ou CNPJ
+    documento: '', // CPF ou CNPJ (Opcional)
     telefone: ''
   },
   produtos: [
-    { id: 'p1', nome: 'Detergente Flotador Conc. (5L)', precoFrasco: 85.00, volumeMl: 5000, custoPorMl: 0.017 },
-    { id: 'p2', nome: 'Neutralizante & EnxÃ¡gue (1L)', precoFrasco: 42.00, volumeMl: 1000, custoPorMl: 0.042 },
-    { id: 'p3', nome: 'Alvejante PerÃ³xido (5L)', precoFrasco: 95.00, volumeMl: 5000, custoPorMl: 0.019 },
-    { id: 'p4', nome: 'Sanitizante & Odorizador (1L)', precoFrasco: 38.00, volumeMl: 1000, custoPorMl: 0.038 }
+    { id: 'p1', nome: '1. Agente Flotador', precoFrasco: 85.00, volumeMl: 5000, custoPorMl: 0.017 },
+    { id: 'p2', nome: '2. Bactericida Alvejante', precoFrasco: 95.00, volumeMl: 5000, custoPorMl: 0.019 },
+    { id: 'p3', nome: '3. Neutralizador de Odor', precoFrasco: 42.00, volumeMl: 1000, custoPorMl: 0.042 },
+    { id: 'p4', nome: '4. Sanitizante', precoFrasco: 38.00, volumeMl: 1000, custoPorMl: 0.038 },
+    { id: 'p5', nome: '5. Tira Manchas', precoFrasco: 55.00, volumeMl: 1000, custoPorMl: 0.055 }
   ],
   calculoAtivo: {
-    itemServico: 'SofÃ¡ 3 Lugares',
+    itemServico: 'Sofá 3 Lugares',
     produtosUsados: [
       { produtoId: 'p1', mlUsados: 150 },
       { produtoId: 'p2', mlUsados: 50 }
@@ -92,12 +93,12 @@ const defaultState = {
       clienteNome: 'Dona Maria Santos',
       clienteTelefone: '11987654321',
       clienteEndereco: 'Rua das Flores, 123 - Centro',
-      itemTipo: 'SofÃ¡ retrÃ¡til 3 lugares',
+      itemTipo: 'Sofá retrátil 3 lugares',
       tecido: 'Suede',
       metragem: '2.40 metros',
       fotoUrl: '',
       valorOrcamento: 220.00,
-      observacoes: 'Incluso remoÃ§Ã£o de manchas de suco e odorizaÃ§Ã£o.',
+      observacoes: 'Incluso remoção de manchas de suco e odorização.',
       dataCriacao: new Date().toISOString()
     }
   ],
@@ -107,7 +108,7 @@ const defaultState = {
       clienteNome: 'Dona Maria Santos',
       clienteTelefone: '11987654321',
       clienteEndereco: 'Rua das Flores, 123 - Centro',
-      objeto: 'SofÃ¡ retrÃ¡til 3 lugares (Suede)',
+      objeto: 'Sofá retrátil 3 lugares (Suede)',
       valor: 220.00,
       dataHora: '2026-09-10T09:00',
       status: 'Agendado'
@@ -146,7 +147,7 @@ function saveState() {
   }
 }
 
-// UtilitÃ¡rios de FormataÃ§Ã£o
+// Utilitários de Formatação
 function formatarMoeda(valor) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor || 0);
 }
@@ -154,10 +155,10 @@ function formatarMoeda(valor) {
 function formatarData(dataIso) {
   if (!dataIso) return '';
   const d = new Date(dataIso);
-  return d.toLocaleDateString('pt-BR') + ' Ã s ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 }
 
-// InicializaÃ§Ã£o Robusta da AplicaÃ§Ã£o (Garante execuÃ§Ã£o no celular mesmo se o DOM jÃ¡ carregou)
+// Inicialização Robusta da Aplicação
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp);
 } else {
@@ -184,75 +185,75 @@ function switchTab(tabName) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// RenderizaÃ§Ã£o Geral
+// Renderização Geral
 function renderApp() {
   const container = document.getElementById('app');
   if (!container) return;
 
-  // Se o usuÃ¡rio nÃ£o estiver identificado por CPF/CNPJ, exibe a tela de login permanente
+  // Se o usuário não estiver identificado, exibe a tela de login
   if (!appState.usuario || !appState.usuario.logado) {
     container.innerHTML = renderLoginScreen();
     return;
   }
 
   container.innerHTML = `
-    <!-- Header Fixo Topo com Dados do UsuÃ¡rio Logado -->
-    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3 shadow-md">
+    <!-- Header Fixo Topo com Fontes Grandes -->
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3.5 shadow-md">
       <div class="max-w-md mx-auto flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-400 flex items-center justify-center font-black text-slate-950 text-xl shadow-lg shadow-sky-500/20">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-400 flex items-center justify-center font-black text-slate-950 text-2xl shadow-lg shadow-sky-500/20">
             VPB
           </div>
           <div>
-            <h1 class="font-bold text-base leading-tight tracking-wide text-white flex items-center gap-1.5">
+            <h1 class="font-black text-xl leading-tight tracking-wide text-white flex items-center gap-1.5">
               VPB HigiLucro
-              <span class="bg-emerald-500/20 text-emerald-400 text-[10px] px-1.5 py-0.5 rounded-full border border-emerald-500/30">PRO</span>
+              <span class="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-full border border-emerald-500/30">PRO</span>
             </h1>
-            <p class="text-xs text-slate-400 font-medium truncate max-w-[180px]">ðŸ‘¤ ${appState.usuario.nome || 'Profissional'}</p>
+            <p class="text-sm text-slate-300 font-bold truncate max-w-[200px]">👤 ${appState.usuario.nome || 'Profissional'}</p>
           </div>
         </div>
-        <div class="flex items-center gap-1">
-          <button onclick="handleEditarPerfil()" title="Ver Perfil CPF/CNPJ" class="p-2 rounded-lg text-slate-400 hover:text-white bg-slate-800/60 active:scale-95 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <div class="flex items-center gap-1.5">
+          <button onclick="handleEditarPerfil()" title="Ver Perfil" class="p-2.5 rounded-xl text-slate-300 hover:text-white bg-slate-800 border border-slate-700 active:scale-95 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
           </button>
-          <button onclick="confirmResetApp()" title="Redefinir Dados de Exemplo" class="p-2 rounded-lg text-slate-400 hover:text-white bg-slate-800/60 active:scale-95 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <button onclick="confirmResetApp()" title="Redefinir Dados de Exemplo" class="p-2.5 rounded-xl text-slate-300 hover:text-white bg-slate-800 border border-slate-700 active:scale-95 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
           </button>
         </div>
       </div>
     </header>
 
-    <!-- ConteÃºdo Principal -->
+    <!-- Conteúdo Principal -->
     <main class="max-w-md mx-auto px-4 pt-4 pb-28 min-h-[calc(100vh-8rem)]">
       ${renderActiveTabContent()}
     </main>
 
-    <!-- NavegaÃ§Ã£o Inferior Estilo App Mobile (5 Abas) -->
-    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur border-t border-slate-800 py-2 px-1 shadow-2xl">
+    <!-- Navegação Inferior Estilo App Mobile (Fontes & Ícones Grandes) -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/98 backdrop-blur border-t border-slate-800 py-2.5 px-1 shadow-2xl">
       <div class="max-w-md mx-auto grid grid-cols-5 gap-1">
-        <button onclick="switchTab('calculadora')" class="flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl transition ${appState.activeTab === 'calculadora' ? 'bg-sky-500/15 text-sky-400 font-bold border border-sky-500/30' : 'text-slate-400 hover:text-slate-200'}">
-          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-          <span class="text-[10px]">Calcular</span>
+        <button onclick="switchTab('calculadora')" class="flex flex-col items-center justify-center py-2 px-0.5 rounded-xl transition ${appState.activeTab === 'calculadora' ? 'bg-sky-500/20 text-sky-300 font-black border border-sky-500/40' : 'text-slate-400 hover:text-slate-200'}">
+          <svg class="w-6 h-6 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          <span class="text-xs font-black">Calcular</span>
         </button>
 
-        <button onclick="switchTab('produtos')" class="flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl transition ${appState.activeTab === 'produtos' ? 'bg-sky-500/15 text-sky-400 font-bold border border-sky-500/30' : 'text-slate-400 hover:text-slate-200'}">
-          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
-          <span class="text-[10px]">Produtos</span>
+        <button onclick="switchTab('produtos')" class="flex flex-col items-center justify-center py-2 px-0.5 rounded-xl transition ${appState.activeTab === 'produtos' ? 'bg-sky-500/20 text-sky-300 font-black border border-sky-500/40' : 'text-slate-400 hover:text-slate-200'}">
+          <svg class="w-6 h-6 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+          <span class="text-xs font-black">Produtos</span>
         </button>
 
-        <button onclick="switchTab('orcamentos')" class="flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl transition ${appState.activeTab === 'orcamentos' ? 'bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30' : 'text-slate-400 hover:text-slate-200'}">
-          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-          <span class="text-[10px]">OrÃ§amento</span>
+        <button onclick="switchTab('orcamentos')" class="flex flex-col items-center justify-center py-2 px-0.5 rounded-xl transition ${appState.activeTab === 'orcamentos' ? 'bg-emerald-500/20 text-emerald-300 font-black border border-emerald-500/40' : 'text-slate-400 hover:text-slate-200'}">
+          <svg class="w-6 h-6 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          <span class="text-xs font-black">Orçamento</span>
         </button>
 
-        <button onclick="switchTab('agenda')" class="flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl transition ${appState.activeTab === 'agenda' ? 'bg-amber-500/15 text-amber-400 font-bold border border-amber-500/30' : 'text-slate-400 hover:text-slate-200'}">
-          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          <span class="text-[10px]">Agenda</span>
+        <button onclick="switchTab('agenda')" class="flex flex-col items-center justify-center py-2 px-0.5 rounded-xl transition ${appState.activeTab === 'agenda' ? 'bg-amber-500/20 text-amber-300 font-black border border-amber-500/40' : 'text-slate-400 hover:text-slate-200'}">
+          <svg class="w-6 h-6 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span class="text-xs font-black">Agenda</span>
         </button>
 
-        <button onclick="switchTab('dicas')" class="flex flex-col items-center justify-center py-1.5 px-0.5 rounded-xl transition ${appState.activeTab === 'dicas' ? 'bg-purple-500/15 text-purple-400 font-bold border border-purple-500/30' : 'text-slate-400 hover:text-slate-200'}">
-          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          <span class="text-[10px]">Dicas & Mkt</span>
+        <button onclick="switchTab('dicas')" class="flex flex-col items-center justify-center py-2 px-0.5 rounded-xl transition ${appState.activeTab === 'dicas' ? 'bg-purple-500/20 text-purple-300 font-black border border-purple-500/40' : 'text-slate-400 hover:text-slate-200'}">
+          <svg class="w-6 h-6 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          <span class="text-xs font-black">Dicas & Mkt</span>
         </button>
       </div>
     </nav>
@@ -260,7 +261,7 @@ function renderApp() {
 }
 
 // ----------------------------------------------------
-// TELA DE LOGIN SIMPLIFICADO POR CPF/CNPJ (SEM SENHA)
+// TELA DE LOGIN SIMPLIFICADO (LETRAS GRANDES & OPCIONAL)
 // ----------------------------------------------------
 function renderLoginScreen() {
   return `
@@ -270,35 +271,35 @@ function renderLoginScreen() {
           <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-emerald-400 mx-auto flex items-center justify-center font-black text-slate-950 text-2xl shadow-xl shadow-sky-500/30">
             VPB
           </div>
-          <h1 class="text-2xl font-black text-white">VPB HigiLucro</h1>
-          <p class="text-xs text-slate-400">Entrada RÃ¡pida e Permanente no seu Celular</p>
+          <h1 class="text-3xl font-black text-white">VPB HigiLucro</h1>
+          <p class="text-sm text-slate-300 font-semibold">Entrada Rápida e Permanente no Celular</p>
         </div>
 
-        <div class="bg-sky-500/10 border border-sky-500/30 p-3 rounded-2xl text-xs text-sky-300">
-          ðŸ”’ <strong>Sem senhas difÃ­ceis!</strong> Digite seu Nome e CPF ou CNPJ. Uma vez logado, vocÃª <strong>nunca mais precisarÃ¡ logar</strong> e nÃ£o perderÃ¡ seus dados no celular!
+        <div class="bg-sky-500/15 border border-sky-500/40 p-4 rounded-2xl text-sm text-sky-200 font-medium leading-relaxed">
+          🔒 <strong>Sem senhas difíceis!</strong> Digite apenas seu Nome (CPF/CNPJ é opcional). Uma vez logado, você <strong>nunca mais precisará logar</strong> e não perderá seus dados no celular!
         </div>
 
         <form onsubmit="handleFazerLoginCPF(event)" class="space-y-4">
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Seu Nome ou Nome da sua Empresa</label>
-            <input type="text" id="login_nome" placeholder="Ex: HigienizaÃ§Ã£o Silva" required
-                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 font-medium">
+            <label class="block text-sm font-extrabold text-slate-200 mb-1.5">Seu Nome ou Nome da sua Empresa *</label>
+            <input type="text" id="login_nome" placeholder="Ex: Higienização Silva" required
+                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 font-bold text-base">
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">CPF ou CNPJ (apenas nÃºmeros)</label>
-            <input type="text" id="login_documento" placeholder="Ex: 123.456.789-00 ou CNPJ" required
-                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 font-medium">
+            <label class="block text-sm font-extrabold text-slate-200 mb-1.5">CPF ou CNPJ (Opcional)</label>
+            <input type="text" id="login_documento" placeholder="Ex: 123.456.789-00 (Opcional)"
+                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 font-bold text-base">
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Seu WhatsApp de Atendimento</label>
-            <input type="tel" id="login_telefone" placeholder="Ex: 11 99999-8888" required
-                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 font-medium">
+            <label class="block text-sm font-extrabold text-slate-200 mb-1.5">Seu WhatsApp de Atendimento (Opcional)</label>
+            <input type="tel" id="login_telefone" placeholder="Ex: 11 99999-8888 (Opcional)"
+                   class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 font-bold text-base">
           </div>
 
-          <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-4 px-4 rounded-xl shadow-xl shadow-emerald-500/25 text-sm uppercase tracking-wider transition">
-            ðŸš€ Entrar no Meu Aplicativo
+          <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-4 px-4 rounded-2xl shadow-xl shadow-emerald-500/25 text-base uppercase tracking-wider transition active:scale-95">
+            🚀 Entrar no Meu Aplicativo
           </button>
         </form>
       </div>
@@ -312,13 +313,13 @@ function handleFazerLoginCPF(e) {
   const documento = document.getElementById('login_documento').value.trim();
   const telefone = document.getElementById('login_telefone').value.trim();
 
-  if (!nome || !documento) return;
+  if (!nome) return;
 
   appState.usuario = {
     logado: true,
-    nome,
-    documento,
-    telefone
+    nome: nome,
+    documento: documento || 'Não informado',
+    telefone: telefone || ''
   };
 
   saveState();
@@ -326,7 +327,7 @@ function handleFazerLoginCPF(e) {
 }
 
 function handleEditarPerfil() {
-  const confirma = confirm(`UsuÃ¡rio Atual: ${appState.usuario.nome}\nCPF/CNPJ: ${appState.usuario.documento}\n\nDeseja alterar estes dados ou trocar de conta neste celular?`);
+  const confirma = confirm(`Usuário Atual: ${appState.usuario.nome}\nCPF/CNPJ: ${appState.usuario.documento}\n\nDeseja alterar estes dados ou trocar de conta neste celular?`);
   if (confirma) {
     appState.usuario.logado = false;
     saveState();
@@ -352,83 +353,100 @@ function renderActiveTabContent() {
 }
 
 // ----------------------------------------------------
-// TAB 1: MEUS PRODUTOS (QUÃMICOS)
+// TAB 1: MEUS PRODUTOS (LETRAS GRANDES & BOTÃO REMOVER)
 // ----------------------------------------------------
+let mostrarFormProdutoState = false;
+
+function toggleFormProduto() {
+  mostrarFormProdutoState = !mostrarFormProdutoState;
+  renderApp();
+}
+
 function renderProdutosTab() {
   return `
     <div class="fade-in space-y-4">
-      <div class="bg-gradient-to-r from-sky-900/40 to-slate-800/80 p-4 rounded-2xl border border-sky-500/30">
-        <h2 class="text-lg font-bold text-sky-400 flex items-center gap-2">
-          ðŸ§ª Meus Produtos & QuÃ­micos
+      <div class="bg-gradient-to-r from-sky-900/40 to-slate-800/80 p-4 rounded-2xl border border-sky-500/40">
+        <h2 class="text-xl font-black text-sky-400 flex items-center gap-2">
+          🧪 Meus Produtos & Químicos
         </h2>
-        <p class="text-xs text-slate-300 mt-1">
-          Cadastre quanto custou o galÃ£o ou frasco. O aplicativo calcula automaticamente o preÃ§o de cada **ML** para vocÃª!
+        <p class="text-sm text-slate-200 mt-1 leading-relaxed font-medium">
+          Confira abaixo seus produtos cadastrados. Clique no botão <strong class="text-rose-400">Remover</strong> para apagar qualquer um ou no botão <strong class="text-sky-400">+</strong> no final para adicionar um novo!
         </p>
       </div>
 
-      <!-- Form de Novo Produto -->
-      <form onsubmit="handleSalvarProduto(event)" class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
-        <h3 class="font-semibold text-white text-sm flex items-center gap-2">
-          <span class="w-6 h-6 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-xs font-bold">+</span>
-          Cadastrar Novo Produto
+      <!-- Lista de Produtos Cadastrados -->
+      <div class="space-y-3">
+        <h3 class="font-black text-slate-200 text-sm uppercase tracking-wider px-1">
+          Lista de Produtos (${appState.produtos.length})
+        </h3>
+
+        ${appState.produtos.length === 0 ? `
+          <div class="p-6 text-center text-slate-400 bg-slate-800/40 rounded-2xl border border-dashed border-slate-700 text-base font-semibold">
+            Nenhum produto cadastrado. Clique no botão abaixo para adicionar!
+          </div>
+        ` : appState.produtos.map(p => `
+          <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex items-center justify-between gap-3 shadow-lg">
+            <div class="flex-1 min-w-0">
+              <h4 class="font-extrabold text-white text-base truncate">${p.nome}</h4>
+              <div class="flex items-center gap-2 mt-1.5 text-sm text-slate-300">
+                <span class="bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700 font-bold text-slate-200">${formatarMoeda(p.precoFrasco)} / ${p.volumeMl}ml</span>
+                <span class="text-emerald-400 font-black">Custo: ${formatarMoeda(p.custoPorMl)}/ml</span>
+              </div>
+            </div>
+            <button onclick="handleExcluirProduto('${p.id}')" class="px-3.5 py-2.5 text-rose-300 hover:text-white bg-rose-500/20 hover:bg-rose-600 rounded-xl border border-rose-500/40 text-xs font-black flex items-center gap-1 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              Remover
+            </button>
+          </div>
+        `).join('')}
+
+        <!-- Botão de Maiszinho (+) abaixo dos produtos para adicionar mais um -->
+        <button onclick="toggleFormProduto()" class="w-full bg-slate-800 hover:bg-slate-700 text-sky-300 border-2 border-sky-500/50 font-black py-4 px-4 rounded-2xl shadow-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wider transition active:scale-95">
+          <span class="w-7 h-7 rounded-full bg-sky-500/30 text-sky-300 flex items-center justify-center text-lg font-black">+</span>
+          Adicionar Mais Algum Produto
+        </button>
+      </div>
+
+      <!-- Form Expansível para Adicionar Novo Produto -->
+      <div id="form_novo_produto" class="${mostrarFormProdutoState ? '' : 'hidden'} bg-slate-800 p-4 rounded-2xl border-2 border-sky-500/50 shadow-2xl space-y-4">
+        <h3 class="font-black text-white text-base flex items-center gap-2 text-sky-400">
+          ➕ Incluir Novo Produto no Estoque
         </h3>
 
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Nome do Produto</label>
-          <input type="text" id="p_nome" placeholder="Ex: Flotador Neutralizante 5L" required
-                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500">
+          <label class="block text-sm font-extrabold text-slate-200 mb-1">Nome do Produto</label>
+          <input type="text" id="p_nome" placeholder="Ex: 6. Impermeabilizante de Tecidos" required
+                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">PreÃ§o Pago (R$)</label>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Preço Pago (R$)</label>
             <input type="number" step="0.01" id="p_preco" placeholder="Ex: 85.00" required
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500">
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Total em ML ou Gramas</label>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Total em ML</label>
             <input type="number" id="p_volume" placeholder="Ex: 5000 (5 Litros)" required
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500">
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
           </div>
         </div>
 
-        <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-sky-600/30 flex items-center justify-center gap-2 text-sm transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Salvar Produto no Estoque
-        </button>
-      </form>
-
-      <!-- Lista de Produtos Cadastrados -->
-      <div class="space-y-2">
-        <h3 class="font-semibold text-slate-300 text-xs uppercase tracking-wider px-1">
-          Produtos Cadastrados (${appState.produtos.length})
-        </h3>
-
-        ${appState.produtos.length === 0 ? `
-          <div class="p-6 text-center text-slate-500 bg-slate-800/40 rounded-2xl border border-dashed border-slate-700">
-            Nenhum produto cadastrado ainda. Preencha o formulÃ¡rio acima!
-          </div>
-        ` : appState.produtos.map(p => `
-          <div class="bg-slate-800/60 p-3.5 rounded-2xl border border-slate-700/60 flex items-center justify-between gap-3">
-            <div class="flex-1 min-w-0">
-              <h4 class="font-bold text-slate-100 text-sm truncate">${p.nome}</h4>
-              <div class="flex items-center gap-2 mt-1 text-xs text-slate-400">
-                <span class="bg-slate-900 px-2 py-0.5 rounded-md border border-slate-700">${formatarMoeda(p.precoFrasco)} / ${p.volumeMl}ml</span>
-                <span class="text-emerald-400 font-medium">Custo: ${formatarMoeda(p.custoPorMl)} / ml</span>
-              </div>
-            </div>
-            <button onclick="handleExcluirProduto('${p.id}')" class="p-2 text-slate-400 hover:text-red-400 bg-slate-900/60 rounded-xl border border-slate-700/50">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-            </button>
-          </div>
-        `).join('')}
+        <div class="grid grid-cols-2 gap-3 pt-1">
+          <button type="button" onclick="toggleFormProduto()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-3 px-3 rounded-xl text-sm">
+            Cancelar
+          </button>
+          <button onclick="handleSalvarProduto(event)" type="button" class="bg-sky-600 hover:bg-sky-500 text-white font-black py-3 px-3 rounded-xl text-sm shadow-lg shadow-sky-600/30 flex items-center justify-center gap-1">
+            Salvar no Estoque
+          </button>
+        </div>
       </div>
     </div>
   `;
 }
 
 function handleSalvarProduto(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   const nome = document.getElementById('p_nome').value.trim();
   const preco = parseFloat(document.getElementById('p_preco').value);
   const volume = parseFloat(document.getElementById('p_volume').value);
@@ -445,6 +463,7 @@ function handleSalvarProduto(e) {
   };
 
   appState.produtos.push(novoProd);
+  mostrarFormProdutoState = false;
   saveState();
   renderApp();
 }
@@ -458,14 +477,13 @@ function handleExcluirProduto(id) {
   }
 }
 
-
 // ----------------------------------------------------
-// TAB 2: CALCULADORA DE CUSTO & TERMÃ”METRO DE LUCRO
+// TAB 2: CALCULADORA DE CUSTO & TERMÔMETRO DE LUCRO
 // ----------------------------------------------------
 function renderCalculadoraTab() {
   const calc = appState.calculoAtivo;
 
-  // CÃ¡lculos dinÃ¢micos
+  // Cálculos dinâmicos
   let custoQuimicos = 0;
   calc.produtosUsados.forEach(pu => {
     const prod = appState.produtos.find(p => p.id === pu.produtoId);
@@ -486,77 +504,77 @@ function renderCalculadoraTab() {
   let lucroLiquido = precoFinalCobrar - custoTotal;
   let margemPorcentagem = custoTotal > 0 ? (lucroLiquido / custoTotal) * 100 : 0;
 
-  // AvaliaÃ§Ã£o do TermÃ´metro de Lucratividade
+  // Avaliação do Termômetro de Lucratividade
   let diagnosticoLucro = {
-    badge: 'ðŸŸ¢ LUCRO EXCELENTE',
-    corClasse: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
-    icone: 'ðŸš€',
-    mensagem: 'Excelente margem! Seu preÃ§o valoriza seu trabalho e multiplica seu lucro diÃ¡rio.'
+    badge: '🟢 LUCRO EXCELENTE',
+    corClasse: 'text-emerald-400 bg-emerald-500/15 border-emerald-500/40',
+    icone: '🚀',
+    mensagem: 'Excelente margem! Seu preço valoriza seu trabalho e multiplica seu lucro diário.'
   };
 
   if (margemPorcentagem < 45) {
     diagnosticoLucro = {
-      badge: 'ðŸ”´ POUCO LUCRO (ATENÃ‡ÃƒO)',
-      corClasse: 'text-rose-400 bg-rose-500/10 border-rose-500/30',
-      icone: 'âš ï¸',
-      mensagem: 'Cuidado! Essa margem Ã© baixa para higienizaÃ§Ã£o. Qualquer mancha difÃ­cil ou atraso pode te dar prejuÃ­zo. Sugerimos subir o valor.'
+      badge: '🔴 POUCO LUCRO (ATENÇÃO)',
+      corClasse: 'text-rose-300 bg-rose-500/15 border-rose-500/40',
+      icone: '⚠️',
+      mensagem: 'Cuidado! Essa margem é baixa para higienização. Qualquer mancha difícil ou atraso pode te dar prejuízo. Sugerimos subir o valor.'
     };
   } else if (margemPorcentagem >= 45 && margemPorcentagem < 90) {
     diagnosticoLucro = {
-      badge: 'ðŸŸ¡ LUCRO MÃ‰DIO (BOM)',
-      corClasse: 'text-amber-300 bg-amber-500/10 border-amber-500/30',
-      icone: 'ðŸ‘',
+      badge: '🟡 LUCRO MÉDIO (BOM)',
+      corClasse: 'text-amber-300 bg-amber-500/15 border-amber-500/40',
+      icone: '👍',
       mensagem: 'Margem segura! Cobre bem os seus custos e garante um pagamento justo pelas suas horas.'
     };
   }
 
   return `
     <div class="fade-in space-y-4">
-      <div class="bg-gradient-to-r from-emerald-950/60 to-slate-800/80 p-4 rounded-2xl border border-emerald-500/30">
-        <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-          ðŸ§® Calcular Custo & TermÃ´metro de Lucro
+      <div class="bg-gradient-to-r from-emerald-950/60 to-slate-800/80 p-4 rounded-2xl border border-emerald-500/40">
+        <h2 class="text-xl font-black text-emerald-400 flex items-center gap-2">
+          🧮 Calcular Custo & Termômetro de Lucro
         </h2>
-        <p class="text-xs text-slate-300 mt-1">
-          Descubra na hora se o valor cobrado dÃ¡ **Pouco, MÃ©dio ou Muito Lucro** para vocÃª!
+        <p class="text-sm text-slate-200 mt-1 leading-relaxed font-medium">
+          Descubra na hora se o valor cobrado dá **Pouco, Médio ou Muito Lucro** para você!
         </p>
       </div>
 
-      <!-- Passo 1: Nome/Tipo do ServiÃ§o -->
-      <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
-        <label class="block text-xs font-bold uppercase tracking-wider text-sky-400">1. O que vocÃª vai higienizar?</label>
-        <div class="grid grid-cols-2 gap-2">
-          ${['SofÃ¡ 2 Lugares', 'SofÃ¡ 3 Lugares', 'ColchÃ£o Casal', 'ColchÃ£o Solteiro', 'Banco Automotivo', 'Poltrona', 'Carrinho BebÃª', 'Outro'].map(tipo => `
-            <button onclick="handleSelectTipoServico('${tipo}')" class="py-2.5 px-3 rounded-xl border text-xs font-semibold transition flex items-center justify-between ${calc.itemServico === tipo ? 'bg-sky-500/20 text-sky-300 border-sky-500' : 'bg-slate-900/60 text-slate-300 border-slate-700 hover:bg-slate-700/50'}">
+      <!-- Passo 1: Nome/Tipo do Serviço -->
+      <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-3">
+        <label class="block text-sm font-black uppercase tracking-wider text-sky-400">1. O que você vai higienizar?</label>
+        <div class="grid grid-cols-2 gap-2.5">
+          ${['Sofá 2 Lugares', 'Sofá 3 Lugares', 'Colchão Casal', 'Colchão Solteiro', 'Banco Automotivo', 'Poltrona', 'Carrinho Bebê', 'Outro'].map(tipo => `
+            <button onclick="handleSelectTipoServico('${tipo}')" class="py-3 px-3 rounded-xl border text-sm font-bold transition flex items-center justify-between ${calc.itemServico === tipo ? 'bg-sky-500/20 text-sky-300 border-sky-500 shadow-md' : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-700'}">
               <span>${tipo}</span>
-              ${calc.itemServico === tipo ? 'âœ“' : ''}
+              ${calc.itemServico === tipo ? '✓' : ''}
             </button>
           `).join('')}
         </div>
       </div>
 
       <!-- Passo 2: Produtos Usados (ML) -->
-      <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
+      <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-3">
         <div class="flex items-center justify-between">
-          <label class="block text-xs font-bold uppercase tracking-wider text-sky-400">2. Produtos & QuÃ­micos Usados</label>
-          <span class="text-xs font-bold text-emerald-400">Subtotal: ${formatarMoeda(custoQuimicos)}</span>
+          <label class="block text-sm font-black uppercase tracking-wider text-sky-400">2. Químicos Usados neste Serviço</label>
+          <span class="text-sm font-black text-emerald-400">Subtotal: ${formatarMoeda(custoQuimicos)}</span>
         </div>
 
         ${calc.produtosUsados.length === 0 ? `
-          <p class="text-xs text-slate-400 italic">Nenhum produto adicionado neste serviÃ§o.</p>
+          <p class="text-sm text-slate-400 italic">Nenhum produto adicionado neste serviço.</p>
         ` : calc.produtosUsados.map((pu, index) => {
           const prod = appState.produtos.find(p => p.id === pu.produtoId);
           if (!prod) return '';
           const custoEsteProd = pu.mlUsados * prod.custoPorMl;
           return `
-            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 flex items-center justify-between gap-2">
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 flex items-center justify-between gap-2">
               <div class="flex-1 min-w-0">
-                <p class="text-xs font-bold text-slate-200 truncate">${prod.nome}</p>
-                <p class="text-[11px] text-slate-400">${formatarMoeda(prod.custoPorMl)}/ml Ã— ${pu.mlUsados}ml = <span class="text-emerald-400 font-semibold">${formatarMoeda(custoEsteProd)}</span></p>
+                <p class="text-sm font-extrabold text-white truncate">${prod.nome}</p>
+                <p class="text-xs text-slate-300 font-semibold">${formatarMoeda(prod.custoPorMl)}/ml × ${pu.mlUsados}ml = <span class="text-emerald-400 font-black">${formatarMoeda(custoEsteProd)}</span></p>
               </div>
-              <div class="flex items-center gap-1">
-                <input type="number" value="${pu.mlUsados}" onchange="handleUpdateMlUsado(${index}, this.value)" class="w-16 bg-slate-800 border border-slate-600 rounded-lg px-2 py-1 text-center text-xs font-bold text-white">
-                <span class="text-xs text-slate-400">ml</span>
-                <button onclick="handleRemoveProdutoDoCalculo(${index})" class="p-1.5 text-slate-500 hover:text-red-400 ml-1">âœ•</button>
+              <div class="flex items-center gap-1.5">
+                <input type="number" value="${pu.mlUsados}" onchange="handleUpdateMlUsado(${index}, this.value)" class="w-20 bg-slate-800 border border-slate-600 rounded-xl px-2 py-1.5 text-center text-sm font-black text-white">
+                <span class="text-xs text-slate-300 font-bold">ml</span>
+                <button onclick="handleRemoveProdutoDoCalculo(${index})" class="p-1.5 text-slate-400 hover:text-rose-400 ml-1 font-bold text-base">✕</button>
               </div>
             </div>
           `;
@@ -564,69 +582,69 @@ function renderCalculadoraTab() {
 
         <!-- Seletor para Adicionar Produto -->
         <div class="flex gap-2 pt-1">
-          <select id="select_add_produto" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+          <select id="select_add_produto" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-xs font-bold text-white">
             <option value="">+ Selecionar outro produto do estoque...</option>
             ${appState.produtos.map(p => `<option value="${p.id}">${p.nome} (${formatarMoeda(p.custoPorMl)}/ml)</option>`).join('')}
           </select>
-          <button onclick="handleAddProdutoAoCalculo()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs px-3 py-2 rounded-xl">
+          <button onclick="handleAddProdutoAoCalculo()" class="bg-sky-600 hover:bg-sky-500 text-white font-black text-xs px-4 py-3 rounded-xl shadow-lg">
             Incluir
           </button>
         </div>
       </div>
 
       <!-- Passo 3: Custos Adicionais Simples -->
-      <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
+      <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-3">
         <div class="flex items-center justify-between">
-          <label class="block text-xs font-bold uppercase tracking-wider text-sky-400">3. Outras Despesas (LocomoÃ§Ã£o, Hora, MÃ¡quina)</label>
-          <span class="text-xs font-bold text-emerald-400">Subtotal: ${formatarMoeda(custoOperacional)}</span>
+          <label class="block text-sm font-black uppercase tracking-wider text-sky-400">3. Outras Despesas (Locomoção, Hora, Máquina)</label>
+          <span class="text-sm font-black text-emerald-400">Subtotal: ${formatarMoeda(custoOperacional)}</span>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-[11px] text-slate-400 mb-1">ðŸš— Gasolina / LocomoÃ§Ã£o (R$)</label>
-            <input type="number" step="0.5" value="${calc.custoLocomocao}" onchange="handleUpdateCalcField('custoLocomocao', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold">
+            <label class="block text-xs font-extrabold text-slate-300 mb-1">🚗 Gasolina / Locomoção (R$)</label>
+            <input type="number" step="0.5" value="${calc.custoLocomocao}" onchange="handleUpdateCalcField('custoLocomocao', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-black">
           </div>
           <div>
-            <label class="block text-[11px] text-slate-400 mb-1">ðŸ§¹ Desgaste de MaquinÃ¡rio (R$)</label>
-            <input type="number" step="0.5" value="${calc.custoMaquinario}" onchange="handleUpdateCalcField('custoMaquinario', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold">
+            <label class="block text-xs font-extrabold text-slate-300 mb-1">🧹 Desgaste Maquinário (R$)</label>
+            <input type="number" step="0.5" value="${calc.custoMaquinario}" onchange="handleUpdateCalcField('custoMaquinario', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-black">
           </div>
           <div>
-            <label class="block text-[11px] text-slate-400 mb-1">â±ï¸ Tempo Estimado (Horas)</label>
-            <input type="number" step="0.5" value="${calc.horasTrabalho}" onchange="handleUpdateCalcField('horasTrabalho', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold">
+            <label class="block text-xs font-extrabold text-slate-300 mb-1">⏱️ Tempo Estimado (Horas)</label>
+            <input type="number" step="0.5" value="${calc.horasTrabalho}" onchange="handleUpdateCalcField('horasTrabalho', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-black">
           </div>
           <div>
-            <label class="block text-[11px] text-slate-400 mb-1">ðŸ’µ Valor da sua Hora (R$)</label>
-            <input type="number" step="1" value="${calc.valorHora}" onchange="handleUpdateCalcField('valorHora', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold">
+            <label class="block text-xs font-extrabold text-slate-300 mb-1">💵 Valor da sua Hora (R$)</label>
+            <input type="number" step="1" value="${calc.valorHora}" onchange="handleUpdateCalcField('valorHora', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-black">
           </div>
           <div>
-            <label class="block text-[11px] text-slate-400 mb-1">ðŸ± AlimentaÃ§Ã£o (R$)</label>
-            <input type="number" step="1" value="${calc.custoAlimentacao}" onchange="handleUpdateCalcField('custoAlimentacao', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold">
+            <label class="block text-xs font-extrabold text-slate-300 mb-1">🍱 Alimentação (R$)</label>
+            <input type="number" step="1" value="${calc.custoAlimentacao}" onchange="handleUpdateCalcField('custoAlimentacao', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-black">
           </div>
           <div>
-            <label class="block text-[11px] text-slate-400 mb-1">ðŸ“¦ Outras Despesas (R$)</label>
-            <input type="number" step="1" value="${calc.custosExtras}" onchange="handleUpdateCalcField('custosExtras', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold">
+            <label class="block text-xs font-extrabold text-slate-300 mb-1">📦 Outras Despesas (R$)</label>
+            <input type="number" step="1" value="${calc.custosExtras}" onchange="handleUpdateCalcField('custosExtras', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white font-black">
           </div>
         </div>
       </div>
 
-      <!-- CARD RESULTADO FINAL & TERMÃ”METRO DE LUCRATIVIDADE -->
+      <!-- CARD RESULTADO FINAL & TERMÔMETRO DE LUCRATIVIDADE -->
       <div class="bg-gradient-to-b from-slate-800 to-slate-900 p-4 rounded-2xl border-2 border-emerald-500 shadow-2xl space-y-4">
         <div class="flex items-center justify-between border-b border-slate-700 pb-3">
           <div>
-            <span class="text-xs text-slate-400 uppercase font-semibold">Custo Total Exato</span>
-            <p class="text-2xl font-black text-rose-400">${formatarMoeda(custoTotal)}</p>
+            <span class="text-xs font-bold text-slate-400 uppercase">Custo Total Exato</span>
+            <p class="text-3xl font-black text-rose-400">${formatarMoeda(custoTotal)}</p>
           </div>
           <div class="text-right">
-            <span class="text-xs text-slate-400 uppercase font-semibold">QuÃ­micos + Operacional</span>
-            <p class="text-xs text-slate-300 font-medium">${formatarMoeda(custoQuimicos)} + ${formatarMoeda(custoOperacional)}</p>
+            <span class="text-xs font-bold text-slate-400 uppercase">Químicos + Operacional</span>
+            <p class="text-sm text-slate-200 font-bold">${formatarMoeda(custoQuimicos)} + ${formatarMoeda(custoOperacional)}</p>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-2">SugestÃ£o de PreÃ§o (Margem de Lucro):</label>
-          <div class="grid grid-cols-4 gap-1.5">
+          <label class="block text-sm font-extrabold text-slate-200 mb-2">Sugestão de Preço (Margem de Lucro):</label>
+          <div class="grid grid-cols-4 gap-2">
             ${[50, 100, 150, 200].map(m => `
-              <button onclick="handleSelectMargem(${m})" class="py-2 rounded-xl border text-xs font-bold transition ${calc.margemSelecionada === m && calc.precoCobradoPersonalizado === null ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/20' : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-700'}">
+              <button onclick="handleSelectMargem(${m})" class="py-3 rounded-xl border text-sm font-black transition ${calc.margemSelecionada === m && calc.precoCobradoPersonalizado === null ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/20' : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-700'}">
                 +${m}%
               </button>
             `).join('')}
@@ -634,33 +652,33 @@ function renderCalculadoraTab() {
         </div>
 
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Ou Digite Quanto Deseja Cobrar do Cliente (R$):</label>
-          <input type="number" step="5" placeholder="Ex: 220.00" value="${calc.precoCobradoPersonalizado !== null ? calc.precoCobradoPersonalizado : ''}" onchange="handleSetPrecoPersonalizado(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-lg font-bold text-emerald-400">
+          <label class="block text-sm font-extrabold text-slate-300 mb-1">Ou Digite Quanto Deseja Cobrar do Cliente (R$):</label>
+          <input type="number" step="5" placeholder="Ex: 220.00" value="${calc.precoCobradoPersonalizado !== null ? calc.precoCobradoPersonalizado : ''}" onchange="handleSetPrecoPersonalizado(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3.5 text-2xl font-black text-emerald-400">
         </div>
 
-        <!-- TERMÃ”METRO DE LUCRATIVIDADE -->
-        <div class="border p-3.5 rounded-xl space-y-2 ${diagnosticoLucro.corClasse}">
+        <!-- TERMÔMETRO DE LUCRATIVIDADE -->
+        <div class="border p-4 rounded-xl space-y-2 ${diagnosticoLucro.corClasse}">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-black uppercase tracking-wider flex items-center gap-1.5">
+            <span class="text-sm font-black uppercase tracking-wider flex items-center gap-2">
               <span>${diagnosticoLucro.icone}</span>
               ${diagnosticoLucro.badge}
             </span>
-            <span class="text-xs font-bold">Margem: ${margemPorcentagem.toFixed(0)}%</span>
+            <span class="text-sm font-black">Margem: ${margemPorcentagem.toFixed(0)}%</span>
           </div>
-          <p class="text-xs leading-relaxed opacity-90">${diagnosticoLucro.mensagem}</p>
+          <p class="text-sm font-bold leading-relaxed opacity-95">${diagnosticoLucro.mensagem}</p>
         </div>
 
-        <div class="bg-emerald-500/10 border border-emerald-500/30 p-3.5 rounded-xl flex items-center justify-between">
+        <div class="bg-emerald-500/15 border border-emerald-500/40 p-4 rounded-xl flex items-center justify-between">
           <div>
-            <p class="text-xs text-emerald-400 font-bold uppercase tracking-wider">Lucro LÃ­quido no Bolso</p>
-            <p class="text-xs text-slate-400">Cobrado (${formatarMoeda(precoFinalCobrar)}) - Custo (${formatarMoeda(custoTotal)})</p>
+            <p class="text-xs text-emerald-400 font-black uppercase tracking-wider">Lucro Líquido no Bolso</p>
+            <p class="text-xs text-slate-300 font-semibold">Cobrado (${formatarMoeda(precoFinalCobrar)}) - Custo (${formatarMoeda(custoTotal)})</p>
           </div>
-          <span class="text-2xl font-black text-emerald-400">${formatarMoeda(lucroLiquido)}</span>
+          <span class="text-3xl font-black text-emerald-400">${formatarMoeda(lucroLiquido)}</span>
         </div>
 
-        <button onclick="handleCriarOrcamentoComCalculo(${precoFinalCobrar})" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-3.5 px-4 rounded-xl shadow-xl shadow-emerald-600/30 flex items-center justify-center gap-2 text-sm transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-          Gerar OrÃ§amento WhatsApp com este Valor
+        <button onclick="handleCriarOrcamentoComCalculo(${precoFinalCobrar})" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-4 px-4 rounded-2xl shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-2 text-base transition active:scale-95">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Gerar Orçamento WhatsApp com este Valor
         </button>
       </div>
     </div>
@@ -732,132 +750,132 @@ function handleCriarOrcamentoComCalculo(valorCalculado) {
 
 
 // ----------------------------------------------------
-// TAB 3: GERADOR DE ORÃ‡AMENTO & WHATSAPP
+// TAB 3: GERADOR DE ORÇAMENTO & WHATSAPP
 // ----------------------------------------------------
 function renderOrcamentosTab() {
   const preenchido = window.novoOrcamentoPreenchido || {};
 
   return `
     <div class="fade-in space-y-4">
-      <div class="bg-gradient-to-r from-emerald-950/60 to-slate-800/80 p-4 rounded-2xl border border-emerald-500/30">
-        <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-          ðŸ“‹ Criar OrÃ§amento para WhatsApp
+      <div class="bg-gradient-to-r from-emerald-950/60 to-slate-800/80 p-4 rounded-2xl border border-emerald-500/40">
+        <h2 class="text-xl font-black text-emerald-400 flex items-center gap-2">
+          📋 Criar Orçamento para WhatsApp
         </h2>
-        <p class="text-xs text-slate-300 mt-1">
+        <p class="text-sm text-slate-200 mt-1 leading-relaxed font-medium">
           Preencha os dados abaixo, inclua fotos se quiser, e envie diretamente para o cliente com 1 toque!
         </p>
       </div>
 
-      <!-- Form de OrÃ§amento -->
-      <form onsubmit="handleSalvarOrcamento(event)" class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
+      <!-- Form de Orçamento com Fontes Grandes -->
+      <form onsubmit="handleSalvarOrcamento(event)" class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-4">
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Nome do Cliente</label>
+          <label class="block text-sm font-extrabold text-slate-200 mb-1">Nome do Cliente *</label>
           <input type="text" id="o_cliente" placeholder="Ex: Maria Santos" required
-                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500">
+                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">WhatsApp (com DDD)</label>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">WhatsApp (DDD) *</label>
             <input type="tel" id="o_telefone" placeholder="Ex: 11999998888" required
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500">
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Valor do OrÃ§amento (R$)</label>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Valor Total (R$) *</label>
             <input type="number" step="0.01" id="o_valor" value="${preenchido.valorOrcamento || ''}" placeholder="Ex: 220.00" required
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-emerald-400 font-bold placeholder-slate-500">
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-emerald-400 font-black text-base">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs text-slate-400 mb-1">EndereÃ§o do Cliente</label>
+          <label class="block text-sm font-extrabold text-slate-200 mb-1">Endereço do Cliente</label>
           <input type="text" id="o_endereco" placeholder="Ex: Rua das Flores, 123 - Bairro Centro"
-                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500">
+                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Tipo do Objeto</label>
-            <select id="o_item" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white">
-              <option ${preenchido.itemTipo === 'SofÃ¡ 3 Lugares' ? 'selected' : ''}>SofÃ¡ RetrÃ¡til 3 Lugares</option>
-              <option ${preenchido.itemTipo === 'SofÃ¡ 2 Lugares' ? 'selected' : ''}>SofÃ¡ 2 Lugares</option>
-              <option ${preenchido.itemTipo === 'ColchÃ£o Casal' ? 'selected' : ''}>ColchÃ£o Casal / Queen</option>
-              <option ${preenchido.itemTipo === 'Banco Automotivo' ? 'selected' : ''}>HigienizaÃ§Ã£o Automotiva Completa</option>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Tipo do Objeto</label>
+            <select id="o_item" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-white font-bold text-sm">
+              <option ${preenchido.itemTipo === 'Sofá 3 Lugares' ? 'selected' : ''}>Sofá Retrátil 3 Lugares</option>
+              <option ${preenchido.itemTipo === 'Sofá 2 Lugares' ? 'selected' : ''}>Sofá 2 Lugares</option>
+              <option ${preenchido.itemTipo === 'Colchão Casal' ? 'selected' : ''}>Colchão Casal / Queen</option>
+              <option ${preenchido.itemTipo === 'Banco Automotivo' ? 'selected' : ''}>Higienização Automotiva Completa</option>
               <option ${preenchido.itemTipo === 'Poltrona' ? 'selected' : ''}>Poltrona / Cadeira</option>
-              <option ${preenchido.itemTipo === 'Carrinho BebÃª' ? 'selected' : ''}>Carrinho de BebÃª / BebÃª Conforto</option>
+              <option ${preenchido.itemTipo === 'Carrinho Bebê' ? 'selected' : ''}>Carrinho de Bebê / Bebê Conforto</option>
               <option>Outro Item</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Tecido / Material</label>
-            <select id="o_tecido" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white">
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Tecido / Material</label>
+            <select id="o_tecido" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-white font-bold text-sm">
               <option>Suede</option>
               <option>Linho</option>
               <option>Veludo</option>
-              <option>Couro / SintÃ©tico</option>
+              <option>Couro / Sintético</option>
               <option>Chenille</option>
-              <option>MatelassÃª</option>
+              <option>Matelassê</option>
               <option>Outro Tecido</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Metragem / Tamanho / Detalhes</label>
-          <input type="text" id="o_metragem" placeholder="Ex: 2,40 metros / 3 assentos retrÃ¡teis"
-                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500">
+          <label class="block text-sm font-extrabold text-slate-200 mb-1">Metragem / Tamanho / Detalhes</label>
+          <input type="text" id="o_metragem" placeholder="Ex: 2,40 metros / 3 assentos retráteis"
+                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
         </div>
 
         <!-- Upload de Foto do Objeto -->
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Foto do Estofado (Opcional)</label>
+          <label class="block text-sm font-extrabold text-slate-200 mb-1">Foto do Estofado (Opcional)</label>
           <input type="file" id="o_foto" accept="image/*" onchange="previewFotoOrcamento(event)"
-                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-400 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-600 file:text-white">
+                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-sky-600 file:text-white">
           <div id="foto_preview_container" class="mt-2 hidden">
-            <img id="foto_preview_img" class="w-full h-32 object-cover rounded-xl border border-slate-700">
+            <img id="foto_preview_img" class="w-full h-36 object-cover rounded-xl border border-slate-700">
           </div>
         </div>
 
-        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-3.5 px-4 rounded-xl shadow-xl shadow-emerald-600/30 flex items-center justify-center gap-2 text-sm transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-          Salvar & Gerar BotÃ£o do WhatsApp
+        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-4 px-4 rounded-2xl shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-2 text-base uppercase tracking-wider transition active:scale-95">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          Salvar & Gerar Botão do WhatsApp
         </button>
       </form>
 
-      <!-- Lista de OrÃ§amentos -->
+      <!-- Lista de Orçamentos -->
       <div class="space-y-3">
-        <h3 class="font-semibold text-slate-300 text-xs uppercase tracking-wider px-1">
-          OrÃ§amentos Salvos (${appState.orcamentos.length})
+        <h3 class="font-black text-slate-200 text-sm uppercase tracking-wider px-1">
+          Orçamentos Salvos (${appState.orcamentos.length})
         </h3>
 
         ${appState.orcamentos.map(o => `
-          <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
+          <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-3">
             <div class="flex items-start justify-between">
               <div>
-                <h4 class="font-bold text-white text-base">${o.clienteNome}</h4>
-                <p class="text-xs text-slate-400">ðŸ“± ${o.clienteTelefone} ${o.clienteEndereco ? 'â€¢ ðŸ“ ' + o.clienteEndereco : ''}</p>
+                <h4 class="font-black text-white text-lg">${o.clienteNome}</h4>
+                <p class="text-sm font-semibold text-slate-300 mt-0.5">📱 ${o.clienteTelefone} ${o.clienteEndereco ? '• 📍 ' + o.clienteEndereco : ''}</p>
               </div>
-              <span class="text-lg font-black text-emerald-400">${formatarMoeda(o.valorOrcamento)}</span>
+              <span class="text-xl font-black text-emerald-400">${formatarMoeda(o.valorOrcamento)}</span>
             </div>
 
-            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 text-xs space-y-1 text-slate-300">
-              <p>ðŸ›‹ï¸ <strong>Objeto:</strong> ${o.itemTipo} (${o.tecido || 'Tecido PadrÃ£o'})</p>
-              ${o.metragem ? `<p>ðŸ“ <strong>Tamanho:</strong> ${o.metragem}</p>` : ''}
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 text-sm space-y-1 text-slate-200 font-medium">
+              <p>🛋️ <strong>Objeto:</strong> ${o.itemTipo} (${o.tecido || 'Tecido Padrão'})</p>
+              ${o.metragem ? `<p>📐 <strong>Tamanho:</strong> ${o.metragem}</p>` : ''}
             </div>
 
             ${o.fotoUrl ? `
-              <img src="${o.fotoUrl}" class="w-full h-36 object-cover rounded-xl border border-slate-700">
+              <img src="${o.fotoUrl}" class="w-full h-40 object-cover rounded-xl border border-slate-700">
             ` : ''}
 
-            <div class="grid grid-cols-2 gap-2 pt-1">
-              <button onclick="handleEnviarWhatsApp('${o.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 text-xs shadow-lg shadow-emerald-600/20">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+            <div class="grid grid-cols-2 gap-2.5 pt-1">
+              <button onclick="handleEnviarWhatsApp('${o.id}')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3 px-3 rounded-xl flex items-center justify-center gap-2 text-sm shadow-lg shadow-emerald-500/20 active:scale-95">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
                 Enviar no WhatsApp
               </button>
 
-              <button onclick="handleAgendarOrcamento('${o.id}')" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 text-xs shadow-lg shadow-amber-600/20">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                PÃ´r na Agenda
+              <button onclick="handleAgendarOrcamento('${o.id}')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3 px-3 rounded-xl flex items-center justify-center gap-2 text-sm shadow-lg shadow-amber-500/20 active:scale-95">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Pôr na Agenda
               </button>
             </div>
           </div>
@@ -921,19 +939,19 @@ function handleEnviarWhatsApp(id) {
   if (!orc) return;
 
   const foneLimpo = orc.clienteTelefone.replace(/\D/g, '');
-  const empresaNome = appState.usuario ? appState.usuario.nome : 'Empresa de HigienizaÃ§Ã£o';
-  const texto = `OlÃ¡ *${orc.clienteNome}*! ðŸ§¼âœ¨
+  const empresaNome = appState.usuario ? appState.usuario.nome : 'Empresa de Higienização';
+  const texto = `Olá *${orc.clienteNome}*! 🧼✨
 
-Aqui Ã© da *${empresaNome}*! Segue a sua cotaÃ§Ã£o de higienizaÃ§Ã£o profissional:
+Aqui é da *${empresaNome}*! Segue a sua cotação de higienização profissional:
 
-ðŸ›‹ï¸ *ServiÃ§o:* ${orc.itemTipo}
-ðŸ§µ *Tecido:* ${orc.tecido || 'PadrÃ£o'}
-${orc.metragem ? 'ðŸ“ *Medida/Obs:* ' + orc.metragem + '\n' : ''}
-ðŸ’° *Valor Total:* ${formatarMoeda(orc.valorOrcamento)}
+🛋️ *Serviço:* ${orc.itemTipo}
+🧵 *Tecido:* ${orc.tecido || 'Padrão'}
+${orc.metragem ? '📐 *Medida/Obs:* ' + orc.metragem + '\n' : ''}
+💰 *Valor Total:* ${formatarMoeda(orc.valorOrcamento)}
 
-Incluso: ExtraÃ§Ã£o de sujeira profunda, Ã¡caros, bactÃ©rias e odorizaÃ§Ã£o profissional.
+Incluso: Extração de sujeira profunda, ácaros, bactérias e odorização profissional.
 
-Podemos agendar a melhor data para vocÃª? Aguardo seu retorno!`;
+Podemos agendar a melhor data para você? Aguardo seu retorno!`;
 
   const url = `https://wa.me/55${foneLimpo}?text=${encodeURIComponent(texto)}`;
   window.open(url, '_blank');
@@ -960,109 +978,109 @@ function handleAgendarOrcamento(id) {
 
   appState.agenda.unshift(novoAgendamento);
   saveState();
-  alert('ServiÃ§o adicionado Ã  sua Agenda com sucesso!');
+  alert('Serviço adicionado à sua Agenda com sucesso!');
   switchTab('agenda');
 }
 
 
 // ----------------------------------------------------
-// TAB 4: AGENDA DE SERVIÃ‡OS
+// TAB 4: AGENDA DE SERVIÇOS
 // ----------------------------------------------------
 function renderAgendaTab() {
   return `
     <div class="fade-in space-y-4">
-      <div class="bg-gradient-to-r from-amber-950/60 to-slate-800/80 p-4 rounded-2xl border border-amber-500/30">
-        <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2">
-          ðŸ“… Agenda de ServiÃ§os
+      <div class="bg-gradient-to-r from-amber-950/60 to-slate-800/80 p-4 rounded-2xl border border-amber-500/40">
+        <h2 class="text-xl font-black text-amber-400 flex items-center gap-2">
+          📅 Agenda de Serviços
         </h2>
-        <p class="text-xs text-slate-300 mt-1">
-          Acompanhe os serviÃ§os marcados, abra a rota de GPS no Waze ou chame o cliente com 1 clique!
+        <p class="text-sm text-slate-200 mt-1 leading-relaxed font-medium">
+          Acompanhe os serviços marcados, abra a rota de GPS no Waze ou chame o cliente com 1 clique!
         </p>
       </div>
 
       <!-- Form de Novo Agendamento Direto -->
-      <form onsubmit="handleSalvarAgendamento(event)" class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
-        <h3 class="font-semibold text-white text-sm flex items-center gap-2">
-          <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold">+</span>
-          Agendar ServiÃ§o Manualmente
+      <form onsubmit="handleSalvarAgendamento(event)" class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-4">
+        <h3 class="font-black text-white text-base flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-amber-500/30 text-amber-300 flex items-center justify-center text-sm font-black">+</span>
+          Agendar Serviço Manualmente
         </h3>
 
         <div>
-          <label class="block text-xs text-slate-400 mb-1">Nome do Cliente</label>
-          <input type="text" id="a_cliente" placeholder="Ex: JoÃ£o da Silva" required
-                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500">
+          <label class="block text-sm font-extrabold text-slate-200 mb-1">Nome do Cliente *</label>
+          <input type="text" id="a_cliente" placeholder="Ex: João da Silva" required
+                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">WhatsApp</label>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">WhatsApp *</label>
             <input type="tel" id="a_telefone" placeholder="Ex: 11988887777" required
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white">
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Data e Hora</label>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Data e Hora *</label>
             <input type="datetime-local" id="a_datahora" required
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-xs text-white">
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-3 text-sm text-white font-bold">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Objeto / ServiÃ§o</label>
-            <input type="text" id="a_objeto" placeholder="Ex: ColchÃ£o Casal" required
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white">
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Objeto / Serviço *</label>
+            <input type="text" id="a_objeto" placeholder="Ex: Colchão Casal" required
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
           </div>
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Valor Cotado (R$)</label>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Valor Cotado (R$) *</label>
             <input type="number" step="0.01" id="a_valor" placeholder="Ex: 180.00" required
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-emerald-400 font-bold">
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-emerald-400 font-black text-base">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs text-slate-400 mb-1">EndereÃ§o Completo (para GPS)</label>
+          <label class="block text-sm font-extrabold text-slate-200 mb-1">Endereço Completo (para GPS)</label>
           <input type="text" id="a_endereco" placeholder="Ex: Av. Paulista, 1000 - Apto 42"
-                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white">
+                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
         </div>
 
-        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-slate-950 font-black py-3 px-4 rounded-xl shadow-lg shadow-amber-600/30 text-xs uppercase tracking-wider">
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-4 px-4 rounded-2xl shadow-xl shadow-amber-500/30 text-sm uppercase tracking-wider transition active:scale-95">
           Adicionar na Agenda
         </button>
       </form>
 
       <!-- Lista de Agendamentos -->
       <div class="space-y-3">
-        <h3 class="font-semibold text-slate-300 text-xs uppercase tracking-wider px-1">
+        <h3 class="font-black text-slate-200 text-sm uppercase tracking-wider px-1">
           Compromissos Agendados (${appState.agenda.length})
         </h3>
 
         ${appState.agenda.map(a => `
-          <div class="bg-slate-800/80 p-4 rounded-2xl border ${a.status === 'ConcluÃ­do' ? 'border-emerald-500/40 bg-emerald-950/10' : a.status === 'Cancelado' ? 'border-rose-500/30' : 'border-slate-700/60'} shadow-lg space-y-3">
+          <div class="bg-slate-800 p-4 rounded-2xl border ${a.status === 'Concluído' ? 'border-emerald-500/50 bg-emerald-950/20' : a.status === 'Cancelado' ? 'border-rose-500/40' : 'border-slate-700'} shadow-lg space-y-3">
             <div class="flex items-start justify-between">
               <div>
-                <span class="text-xs font-bold text-amber-400">ðŸ—“ï¸ ${formatarData(a.dataHora)}</span>
-                <h4 class="font-bold text-white text-base mt-0.5">${a.clienteNome}</h4>
+                <span class="text-xs font-black text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/30">🗓️ ${formatarData(a.dataHora)}</span>
+                <h4 class="font-black text-white text-lg mt-1">${a.clienteNome}</h4>
               </div>
-              <span class="px-2.5 py-1 rounded-full text-xs font-bold ${a.status === 'ConcluÃ­do' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : a.status === 'Cancelado' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}">
+              <span class="px-3 py-1 rounded-full text-xs font-black ${a.status === 'Concluído' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : a.status === 'Cancelado' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'}">
                 ${a.status}
               </span>
             </div>
 
-            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 text-xs space-y-1 text-slate-300">
-              <p>ðŸ›‹ï¸ <strong>ServiÃ§o:</strong> ${a.objeto}</p>
-              <p>ðŸ’° <strong>Valor Cotado:</strong> <span class="text-emerald-400 font-bold">${formatarMoeda(a.valor)}</span></p>
-              ${a.clienteEndereco ? `<p>ðŸ“ <strong>EndereÃ§o:</strong> ${a.clienteEndereco}</p>` : ''}
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 text-sm space-y-1.5 text-slate-200 font-medium">
+              <p>🛋️ <strong>Serviço:</strong> ${a.objeto}</p>
+              <p>💰 <strong>Valor Cotado:</strong> <span class="text-emerald-400 font-black text-base">${formatarMoeda(a.valor)}</span></p>
+              ${a.clienteEndereco ? `<p>📍 <strong>Endereço:</strong> ${a.clienteEndereco}</p>` : ''}
             </div>
 
             <div class="grid grid-cols-3 gap-2">
-              <button onclick="handleAbrirWaze('${a.clienteEndereco}')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium py-2 px-2 rounded-xl text-xs flex items-center justify-center gap-1">
-                ðŸ“ GPS / Rota
+              <button onclick="handleAbrirWaze('${a.clienteEndereco}')" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2.5 px-2 rounded-xl text-xs flex items-center justify-center gap-1">
+                📍 GPS / Rota
               </button>
-              <button onclick="handleChamarCliente('${a.clienteTelefone}')" class="bg-sky-700 hover:bg-sky-600 text-white font-medium py-2 px-2 rounded-xl text-xs flex items-center justify-center gap-1">
-                ðŸ’¬ WhatsApp
+              <button onclick="handleChamarCliente('${a.clienteTelefone}')" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 px-2 rounded-xl text-xs flex items-center justify-center gap-1">
+                💬 WhatsApp
               </button>
-              <button onclick="handleAlternarStatusAgenda('${a.id}')" class="bg-slate-900 hover:bg-slate-950 text-slate-300 border border-slate-700 font-medium py-2 px-2 rounded-xl text-xs flex items-center justify-center gap-1">
-                ðŸ”„ Status
+              <button onclick="handleAlternarStatusAgenda('${a.id}')" class="bg-slate-900 hover:bg-slate-950 text-slate-200 border border-slate-700 font-bold py-2.5 px-2 rounded-xl text-xs flex items-center justify-center gap-1">
+                🔄 Status
               </button>
             </div>
           </div>
@@ -1101,7 +1119,7 @@ function handleSalvarAgendamento(e) {
 
 function handleAbrirWaze(endereco) {
   if (!endereco) {
-    alert('Nenhum endereÃ§o cadastrado para este serviÃ§o.');
+    alert('Nenhum endereço cadastrado para este serviço.');
     return;
   }
   const url = `https://maps.google.com/?q=${encodeURIComponent(endereco)}`;
@@ -1117,8 +1135,8 @@ function handleAlternarStatusAgenda(id) {
   const item = appState.agenda.find(a => a.id === id);
   if (!item) return;
 
-  if (item.status === 'Agendado') item.status = 'ConcluÃ­do';
-  else if (item.status === 'ConcluÃ­do') item.status = 'Cancelado';
+  if (item.status === 'Agendado') item.status = 'Concluído';
+  else if (item.status === 'Concluído') item.status = 'Cancelado';
   else item.status = 'Agendado';
 
   saveState();
@@ -1127,75 +1145,75 @@ function handleAlternarStatusAgenda(id) {
 
 
 // ----------------------------------------------------
-// TAB 5: DICAS DE PRECIFICAÃ‡ÃƒO & MARKETING
+// TAB 5: DICAS DE PRECIFICAÇÃO & MARKETING
 // ----------------------------------------------------
 function renderDicasTab() {
   return `
     <div class="fade-in space-y-4">
-      <div class="bg-gradient-to-r from-purple-950/60 to-slate-800/80 p-4 rounded-2xl border border-purple-500/30">
-        <h2 class="text-lg font-bold text-purple-400 flex items-center gap-2">
-          ðŸ’¡ Dicas de PrecificaÃ§Ã£o & DivulgaÃ§Ã£o
+      <div class="bg-gradient-to-r from-purple-950/60 to-slate-800/80 p-4 rounded-2xl border border-purple-500/40">
+        <h2 class="text-xl font-black text-purple-400 flex items-center gap-2">
+          💡 Dicas de Precificação & Divulgação
         </h2>
-        <p class="text-xs text-slate-300 mt-1">
+        <p class="text-sm text-slate-200 mt-1 leading-relaxed font-medium">
           Aprenda como valorizar seu trabalho e atrair mais clientes todos os dias!
         </p>
       </div>
 
-      <!-- SeÃ§Ã£o 1: PrecificaÃ§Ã£o sem Erros -->
-      <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
-        <h3 class="font-bold text-white text-sm flex items-center gap-2 text-sky-400">
-          ðŸ’° Como Precificar Corretamente
+      <!-- Seção 1: Precificação sem Erros -->
+      <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-3">
+        <h3 class="font-black text-sky-400 text-base flex items-center gap-2">
+          💰 Como Precificar Corretamente
         </h3>
-        <ul class="text-xs text-slate-300 space-y-2 leading-relaxed">
+        <ul class="text-sm text-slate-200 space-y-2.5 leading-relaxed font-medium">
           <li class="flex items-start gap-2">
-            <span class="text-emerald-400 font-bold">1.</span>
-            <span><strong>Defina um valor mÃ­nimo por visita:</strong> Nunca saia de casa por menos de R$ 120,00 ou R$ 150,00. O tempo de deslocamento e o desgaste da extratora precisam ser cobrados.</span>
+            <span class="text-emerald-400 font-black">1.</span>
+            <span><strong>Defina um valor mínimo por visita:</strong> Nunca saia de casa por menos de R$ 120,00 ou R$ 150,00. O tempo de deslocamento e o desgaste da extratora precisam ser cobrados.</span>
           </li>
           <li class="flex items-start gap-2">
-            <span class="text-emerald-400 font-bold">2.</span>
-            <span><strong>Tecidos Delicados (Linho / Veludo / Couro):</strong> Cobre de 20% a 30% a mais do que no Suede tradicional, pois exigem produtos especÃ­ficos e mais cuidado.</span>
+            <span class="text-emerald-400 font-black">2.</span>
+            <span><strong>Tecidos Delicados (Linho / Veludo / Couro):</strong> Cobre de 20% a 30% a mais do que no Suede tradicional, pois exigem produtos específicos e mais cuidado.</span>
           </li>
           <li class="flex items-start gap-2">
-            <span class="text-emerald-400 font-bold">3.</span>
-            <span><strong>Odor de Urina de Pet ou Sujidade Extrema:</strong> Cobre uma taxa extra para neutralizaÃ§Ã£o de odor e uso dobrado de flotador.</span>
+            <span class="text-emerald-400 font-black">3.</span>
+            <span><strong>Odor de Urina de Pet ou Sujidade Extrema:</strong> Cobre uma taxa extra para neutralização de odor e uso dobrado de flotador.</span>
           </li>
         </ul>
       </div>
 
-      <!-- SeÃ§Ã£o 2: Como Divulgar e Conseguir Clientes -->
-      <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
-        <h3 class="font-bold text-white text-sm flex items-center gap-2 text-emerald-400">
-          ðŸ“¢ 3 Passos Simples para Atrair Clientes
+      <!-- Seção 2: Como Divulgar e Conseguir Clientes -->
+      <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-3">
+        <h3 class="font-black text-emerald-400 text-base flex items-center gap-2">
+          📢 3 Passos Simples para Atrair Clientes
         </h3>
-        <div class="space-y-3 text-xs text-slate-300">
-          <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-            <p class="font-bold text-white mb-1">1. Google Meu NegÃ³cio (100% Gratuito)</p>
-            <p>Cadastre sua empresa no Google Maps com a frase *"HigienizaÃ§Ã£o de SofÃ¡s em [Sua Cidade]"*. As pessoas pesquisam diariamente no Google antes de contratar!</p>
+        <div class="space-y-3 text-sm text-slate-200">
+          <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-extrabold text-white mb-1">1. Google Meu Negócio (100% Gratuito)</p>
+            <p class="font-medium">Cadastre sua empresa no Google Maps com a frase *"Higienização de Sofás em [Sua Cidade]"*. As pessoas pesquisam diariamente no Google antes de contratar!</p>
           </div>
-          <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-            <p class="font-bold text-white mb-1">2. Fotos Antes & Depois</p>
-            <p>Tire foto da metade do sofÃ¡ limpa e a outra metade suja durante a extraÃ§Ã£o. Essa Ã© a imagem que mais gera vendas no Instagram e WhatsApp!</p>
+          <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-extrabold text-white mb-1">2. Fotos Antes & Depois</p>
+            <p class="font-medium">Tire foto da metade do sofá limpa e a outra metade suja durante a extração. Essa é a imagem que mais gera vendas no Instagram e WhatsApp!</p>
           </div>
-          <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-            <p class="font-bold text-white mb-1">3. Parceria com Lojas de MÃ³veis Usados e Lavanderias</p>
-            <p>Deixe cartÃµes de visita em lojas de mÃ³veis usados da sua cidade oferecendo comissÃ£o ou desconto em troca de indicaÃ§Ãµes.</p>
+          <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700">
+            <p class="font-extrabold text-white mb-1">3. Parceria com Lojas de Móveis Usados e Lavanderias</p>
+            <p class="font-medium">Deixe cartões de visita em lojas de móveis usados da sua cidade oferecendo comissão ou desconto em troca de indicações.</p>
           </div>
         </div>
       </div>
 
-      <!-- SeÃ§Ã£o 3: Script Pronto de Vendas -->
-      <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-lg space-y-3">
-        <h3 class="font-bold text-white text-sm flex items-center gap-2 text-amber-400">
-          ðŸ’¬ Mensagem de Vendas Pronta para Copiar
+      <!-- Seção 3: Script Pronto de Vendas -->
+      <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-3">
+        <h3 class="font-black text-amber-400 text-base flex items-center gap-2">
+          💬 Mensagem de Vendas Pronta para Copiar
         </h3>
-        <p class="text-xs text-slate-400">Use para mandar para o cliente que pediu orÃ§amento e parou de responder:</p>
+        <p class="text-sm text-slate-300 font-semibold">Use para mandar para o cliente que pediu orçamento e parou de responder:</p>
 
-        <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-xs text-slate-300 leading-relaxed font-mono relative">
-          <p id="script_texto">OlÃ¡! Passando para saber se ficou com alguma dÃºvida sobre o orÃ§amento da higienizaÃ§Ã£o do seu estofado? Tenho um horÃ¡rio vago nesta semana com desconto especial no pagamento Ã  vista! Posso reservar para vocÃª?</p>
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 text-sm text-slate-200 leading-relaxed font-semibold relative">
+          <p id="script_texto">Olá! Passando para saber se ficou com alguma dúvida sobre o orçamento da higienização do seu estofado? Tenho um horário vago nesta semana com desconto especial no pagamento à vista! Posso reservar para você?</p>
         </div>
 
-        <button onclick="handleCopiarScript()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-600/20">
-          ðŸ“‹ Copiar Mensagem de Vendas
+        <button onclick="handleCopiarScript()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-3.5 px-3 rounded-2xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-purple-600/30 uppercase tracking-wider">
+          📋 Copiar Mensagem de Vendas
         </button>
       </div>
     </div>
@@ -1205,14 +1223,14 @@ function renderDicasTab() {
 function handleCopiarScript() {
   const texto = document.getElementById('script_texto').innerText;
   navigator.clipboard.writeText(texto).then(() => {
-    alert('Mensagem copiada com sucesso! Agora Ã© sÃ³ colar no WhatsApp do cliente.');
+    alert('Mensagem copiada com sucesso! Agora é só colar no WhatsApp do cliente.');
   }).catch(() => {
     alert('Selecione e copie o texto manualmente.');
   });
 }
 
 function confirmResetApp() {
-  if (confirm('Deseja redefinir os dados para o padrÃ£o de exemplo?')) {
+  if (confirm('Deseja redefinir os dados para o padrão de exemplo?')) {
     localStorage.removeItem(STORAGE_KEY);
     appState = { ...defaultState };
     saveState();
