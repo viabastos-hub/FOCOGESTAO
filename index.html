@@ -40,8 +40,10 @@
   <!-- Mount Point Principal do App -->
   <div id="app">
     <div class="min-h-screen flex flex-col items-center justify-center p-4">
-      <div class="w-12 h-12 rounded-2xl bg-sky-500 animate-bounce flex items-center justify-center font-black text-slate-950 text-xl shadow-lg shadow-sky-500/50">
-        VPB
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 via-emerald-400 to-amber-400 p-0.5 shadow-xl shadow-sky-500/30 flex items-center justify-center animate-pulse">
+        <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+          <svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 01-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        </div>
       </div>
       <p class="mt-4 text-base text-slate-300 font-bold">Carregando VPB HigiLucro...</p>
     </div>
@@ -50,13 +52,13 @@
   <script>
 /**
  * VPB HigiLucro - Aplicativo de Gestão e Cálculos para Higienização de Estofados
- * Desenvolvido para máxima simplicidade visual e LEITURA FÁCIL em celulares.
+ * Desenvolvido para máxima simplicidade visual, IMAGENS DE PRODUTOS e letras grandes.
  */
 
 // Key para armazenar dados no LocalStorage
-const STORAGE_KEY = 'VPB_HIGILUCRO_DATA_V4';
+const STORAGE_KEY = 'VPB_HIGILUCRO_DATA_V6';
 
-// Estado inicial com exemplos práticos pré-carregados
+// Estado inicial com exemplos práticos pré-carregados com imagens de produtos
 const defaultState = {
   activeTab: 'calculadora', // 'produtos', 'calculadora', 'orcamentos', 'agenda', 'dicas'
   usuario: {
@@ -66,11 +68,14 @@ const defaultState = {
     telefone: ''
   },
   produtos: [
-    { id: 'p1', nome: '1. Agente Flotador', precoFrasco: 85.00, volumeMl: 5000, custoPorMl: 0.017 },
-    { id: 'p2', nome: '2. Bactericida Alvejante', precoFrasco: 95.00, volumeMl: 5000, custoPorMl: 0.019 },
-    { id: 'p3', nome: '3. Neutralizador de Odor', precoFrasco: 42.00, volumeMl: 1000, custoPorMl: 0.042 },
-    { id: 'p4', nome: '4. Sanitizante', precoFrasco: 38.00, volumeMl: 1000, custoPorMl: 0.038 },
-    { id: 'p5', nome: '5. Tira Manchas', precoFrasco: 55.00, volumeMl: 1000, custoPorMl: 0.055 }
+    { id: 'p1', eBase: true, nome: '1. Agente Flotador', foto: 'https://cdn-icons-png.flaticon.com/512/2972/2972531.png', precoFrasco: 85.00, volumeMl: 5000, custoPorMl: 0.017 },
+    { id: 'p2', eBase: true, nome: '2. Bactericida Alvejante', foto: 'https://cdn-icons-png.flaticon.com/512/3003/3003204.png', precoFrasco: 95.00, volumeMl: 5000, custoPorMl: 0.019 },
+    { id: 'p3', eBase: true, nome: '3. Neutralizador de Odor', foto: 'https://cdn-icons-png.flaticon.com/512/2917/2917242.png', precoFrasco: 42.00, volumeMl: 1000, custoPorMl: 0.042 },
+    { id: 'p4', eBase: true, nome: '4. Sanitizante', foto: 'https://cdn-icons-png.flaticon.com/512/2917/2917242.png', precoFrasco: 38.00, volumeMl: 1000, custoPorMl: 0.038 },
+    { id: 'p5', eBase: true, nome: '5. Tira Manchas', foto: 'https://cdn-icons-png.flaticon.com/512/3003/3003204.png', precoFrasco: 55.00, volumeMl: 1000, custoPorMl: 0.055 },
+    { id: 'p6', eBase: true, nome: '6. Alvejante com Cloro', foto: 'https://cdn-icons-png.flaticon.com/512/2972/2972531.png', precoFrasco: 45.00, volumeMl: 5000, custoPorMl: 0.009 },
+    { id: 'p7', eBase: true, nome: '7. Alvejante sem Cloro', foto: 'https://cdn-icons-png.flaticon.com/512/2972/2972531.png', precoFrasco: 60.00, volumeMl: 5000, custoPorMl: 0.012 },
+    { id: 'p8', eBase: true, nome: '8. Sabão Líquido', foto: 'https://cdn-icons-png.flaticon.com/512/3003/3003204.png', precoFrasco: 35.00, volumeMl: 5000, custoPorMl: 0.007 }
   ],
   calculoAtivo: {
     itemServico: 'Sofá 3 Lugares',
@@ -197,12 +202,14 @@ function renderApp() {
   }
 
   container.innerHTML = `
-    <!-- Header Fixo Topo com Fontes Grandes -->
+    <!-- Header Fixo Topo estilo Foco Higienização (Logo Profissional + Borrifador) -->
     <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3.5 shadow-md">
       <div class="max-w-md mx-auto flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-400 flex items-center justify-center font-black text-slate-950 text-2xl shadow-lg shadow-sky-500/20">
-            VPB
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 via-emerald-400 to-amber-400 p-0.5 shadow-xl shadow-sky-500/20 flex items-center justify-center shrink-0">
+            <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+              <svg class="w-7 h-7 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            </div>
           </div>
           <div>
             <h1 class="font-black text-xl leading-tight tracking-wide text-white flex items-center gap-1.5">
@@ -261,18 +268,20 @@ function renderApp() {
 }
 
 // ----------------------------------------------------
-// TELA DE LOGIN SIMPLIFICADO (LETRAS GRANDES & OPCIONAL)
+// TELA DE LOGIN SIMPLIFICADO
 // ----------------------------------------------------
 function renderLoginScreen() {
   return `
     <div class="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
       <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-2xl space-y-6">
-        <div class="text-center space-y-2">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-emerald-400 mx-auto flex items-center justify-center font-black text-slate-950 text-2xl shadow-xl shadow-sky-500/30">
-            VPB
+        <div class="text-center space-y-3">
+          <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-sky-500 via-emerald-400 to-amber-400 p-0.5 mx-auto shadow-2xl shadow-sky-500/30 flex items-center justify-center">
+            <div class="w-full h-full bg-slate-950 rounded-[22px] flex items-center justify-center">
+              <svg class="w-10 h-10 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            </div>
           </div>
           <h1 class="text-3xl font-black text-white">VPB HigiLucro</h1>
-          <p class="text-sm text-slate-300 font-semibold">Entrada Rápida e Permanente no Celular</p>
+          <p class="text-sm text-slate-300 font-semibold">Higienização Profissional de Estofados</p>
         </div>
 
         <div class="bg-sky-500/15 border border-sky-500/40 p-4 rounded-2xl text-sm text-sky-200 font-medium leading-relaxed">
@@ -353,13 +362,57 @@ function renderActiveTabContent() {
 }
 
 // ----------------------------------------------------
-// TAB 1: MEUS PRODUTOS (LETRAS GRANDES & BOTÃO REMOVER)
+// TAB 1: MEUS PRODUTOS (COM FOTOS DE PRODUTOS & EDIÇÃO)
 // ----------------------------------------------------
 let mostrarFormProdutoState = false;
+let produtoEmEdicaoId = null;
+let tempFotoProdutoBase64 = '';
 
 function toggleFormProduto() {
   mostrarFormProdutoState = !mostrarFormProdutoState;
+  tempFotoProdutoBase64 = '';
   renderApp();
+}
+
+function handleAbrirEditarProduto(id) {
+  produtoEmEdicaoId = id;
+  renderApp();
+}
+
+function handleCancelarEditarProduto() {
+  produtoEmEdicaoId = null;
+  renderApp();
+}
+
+function handleSalvarEdicaoProduto(id) {
+  const preco = parseFloat(document.getElementById(`edit_preco_${id}`).value);
+  const volume = parseFloat(document.getElementById(`edit_volume_${id}`).value);
+  if (isNaN(preco) || isNaN(volume) || volume <= 0) return;
+
+  const prod = appState.produtos.find(p => p.id === id);
+  if (prod) {
+    prod.precoFrasco = preco;
+    prod.volumeMl = volume;
+    prod.custoPorMl = preco / volume;
+  }
+  produtoEmEdicaoId = null;
+  saveState();
+  renderApp();
+}
+
+function previewFotoProduto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    tempFotoProdutoBase64 = evt.target.result;
+    const img = document.getElementById('prod_foto_preview_img');
+    if (img) {
+      img.src = tempFotoProdutoBase64;
+      document.getElementById('prod_foto_preview_container').classList.remove('hidden');
+    }
+  };
+  reader.readAsDataURL(file);
 }
 
 function renderProdutosTab() {
@@ -370,35 +423,75 @@ function renderProdutosTab() {
           🧪 Meus Produtos & Químicos
         </h2>
         <p class="text-sm text-slate-200 mt-1 leading-relaxed font-medium">
-          Confira abaixo seus produtos cadastrados. Clique no botão <strong class="text-rose-400">Remover</strong> para apagar qualquer um ou no botão <strong class="text-sky-400">+</strong> no final para adicionar um novo!
+          Os 8 produtos principais abaixo contêm **imagens ilustrativas e são fixos no sistema**. Você pode ajustar o preço que pagou no frasco e incluir novos produtos com fotos!
         </p>
       </div>
 
-      <!-- Lista de Produtos Cadastrados -->
+      <!-- Lista de Produtos Cadastrados com Imagens (8 Fixos + Personalizados) -->
       <div class="space-y-3">
         <h3 class="font-black text-slate-200 text-sm uppercase tracking-wider px-1">
           Lista de Produtos (${appState.produtos.length})
         </h3>
 
-        ${appState.produtos.length === 0 ? `
-          <div class="p-6 text-center text-slate-400 bg-slate-800/40 rounded-2xl border border-dashed border-slate-700 text-base font-semibold">
-            Nenhum produto cadastrado. Clique no botão abaixo para adicionar!
-          </div>
-        ` : appState.produtos.map(p => `
-          <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex items-center justify-between gap-3 shadow-lg">
-            <div class="flex-1 min-w-0">
-              <h4 class="font-extrabold text-white text-base truncate">${p.nome}</h4>
-              <div class="flex items-center gap-2 mt-1.5 text-sm text-slate-300">
-                <span class="bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700 font-bold text-slate-200">${formatarMoeda(p.precoFrasco)} / ${p.volumeMl}ml</span>
-                <span class="text-emerald-400 font-black">Custo: ${formatarMoeda(p.custoPorMl)}/ml</span>
+        ${appState.produtos.map(p => {
+          const emEdicao = (produtoEmEdicaoId === p.id);
+          if (emEdicao) {
+            return `
+              <div class="bg-slate-800 p-4 rounded-2xl border-2 border-sky-500 shadow-xl space-y-3">
+                <h4 class="font-black text-sky-400 text-base">Editar Valores: ${p.nome}</h4>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Preço Pago (R$)</label>
+                    <input type="number" step="0.01" id="edit_preco_${p.id}" value="${p.precoFrasco}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold text-base">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Total em ML</label>
+                    <input type="number" id="edit_volume_${p.id}" value="${p.volumeMl}" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold text-base">
+                  </div>
+                </div>
+                <div class="flex gap-2 pt-1">
+                  <button onclick="handleSalvarEdicaoProduto('${p.id}')" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-2.5 px-3 rounded-xl text-sm shadow-md">
+                    Salvar Alteração
+                  </button>
+                  <button onclick="handleCancelarEditarProduto()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold py-2.5 px-3 rounded-xl text-sm">
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            `;
+          }
+
+          return `
+            <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700 flex items-center justify-between gap-3 shadow-lg">
+              <!-- Foto do Produto -->
+              <div class="w-14 h-14 rounded-xl bg-slate-900 border border-slate-700 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
+                <img src="${p.foto || 'https://cdn-icons-png.flaticon.com/512/2972/2972531.png'}" class="w-full h-full object-contain">
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <h4 class="font-extrabold text-white text-base truncate">${p.nome}</h4>
+                  ${p.eBase ? '<span class="bg-sky-500/20 text-sky-300 border border-sky-500/30 text-[10px] px-1.5 py-0.5 rounded-md font-bold shrink-0">Fixo</span>' : ''}
+                </div>
+                <div class="flex items-center gap-2 mt-1 text-sm text-slate-300">
+                  <span class="bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-700 font-bold text-slate-200">${formatarMoeda(p.precoFrasco)} / ${p.volumeMl}ml</span>
+                  <span class="text-emerald-400 font-black">Custo: ${formatarMoeda(p.custoPorMl)}/ml</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1 shrink-0">
+                <button onclick="handleAbrirEditarProduto('${p.id}')" title="Editar Preço e Frasco" class="px-2.5 py-2 text-sky-300 hover:text-white bg-sky-500/20 hover:bg-sky-600 rounded-xl border border-sky-500/40 text-xs font-black transition">
+                  Editar Preço
+                </button>
+                ${!p.eBase ? `
+                  <button onclick="handleExcluirProduto('${p.id}')" title="Remover Produto Extra" class="px-2 py-2 text-rose-300 hover:text-white bg-rose-500/20 hover:bg-rose-600 rounded-xl border border-rose-500/40 text-xs font-black transition">
+                    ✕
+                  </button>
+                ` : ''}
               </div>
             </div>
-            <button onclick="handleExcluirProduto('${p.id}')" class="px-3.5 py-2.5 text-rose-300 hover:text-white bg-rose-500/20 hover:bg-rose-600 rounded-xl border border-rose-500/40 text-xs font-black flex items-center gap-1 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-              Remover
-            </button>
-          </div>
-        `).join('')}
+          `;
+        }).join('')}
 
         <!-- Botão de Maiszinho (+) abaixo dos produtos para adicionar mais um -->
         <button onclick="toggleFormProduto()" class="w-full bg-slate-800 hover:bg-slate-700 text-sky-300 border-2 border-sky-500/50 font-black py-4 px-4 rounded-2xl shadow-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wider transition active:scale-95">
@@ -407,28 +500,37 @@ function renderProdutosTab() {
         </button>
       </div>
 
-      <!-- Form Expansível para Adicionar Novo Produto -->
+      <!-- Form Expansível para Adicionar Novo Produto com Foto -->
       <div id="form_novo_produto" class="${mostrarFormProdutoState ? '' : 'hidden'} bg-slate-800 p-4 rounded-2xl border-2 border-sky-500/50 shadow-2xl space-y-4">
         <h3 class="font-black text-white text-base flex items-center gap-2 text-sky-400">
           ➕ Incluir Novo Produto no Estoque
         </h3>
 
         <div>
-          <label class="block text-sm font-extrabold text-slate-200 mb-1">Nome do Produto</label>
-          <input type="text" id="p_nome" placeholder="Ex: 6. Impermeabilizante de Tecidos" required
+          <label class="block text-sm font-extrabold text-slate-200 mb-1">Nome do Produto *</label>
+          <input type="text" id="p_nome" placeholder="Ex: 9. Impermeabilizante de Tecidos" required
                  class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-sm font-extrabold text-slate-200 mb-1">Preço Pago (R$)</label>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Preço Pago (R$) *</label>
             <input type="number" step="0.01" id="p_preco" placeholder="Ex: 85.00" required
                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
           </div>
           <div>
-            <label class="block text-sm font-extrabold text-slate-200 mb-1">Total em ML</label>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Total em ML *</label>
             <input type="number" id="p_volume" placeholder="Ex: 5000 (5 Litros)" required
                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-extrabold text-slate-200 mb-1">Foto da Embalagem / Produto (Opcional)</label>
+          <input type="file" id="p_foto_file" accept="image/*" onchange="previewFotoProduto(event)"
+                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-sky-600 file:text-white">
+          <div id="prod_foto_preview_container" class="mt-2 hidden flex items-center justify-center">
+            <img id="prod_foto_preview_img" class="w-20 h-20 object-contain rounded-xl border border-slate-700 bg-slate-900 p-1">
           </div>
         </div>
 
@@ -456,7 +558,9 @@ function handleSalvarProduto(e) {
   const custoPorMl = preco / volume;
   const novoProd = {
     id: 'p_' + Date.now(),
+    eBase: false,
     nome,
+    foto: tempFotoProdutoBase64 || 'https://cdn-icons-png.flaticon.com/512/2972/2972531.png',
     precoFrasco: preco,
     volumeMl: volume,
     custoPorMl
@@ -464,12 +568,18 @@ function handleSalvarProduto(e) {
 
   appState.produtos.push(novoProd);
   mostrarFormProdutoState = false;
+  tempFotoProdutoBase64 = '';
   saveState();
   renderApp();
 }
 
 function handleExcluirProduto(id) {
-  if (confirm('Deseja realmente remover este produto?')) {
+  const prod = appState.produtos.find(p => p.id === id);
+  if (prod && prod.eBase) {
+    alert('Este produto é padrão do sistema e não pode ser removido.');
+    return;
+  }
+  if (confirm('Deseja realmente remover este produto extra?')) {
     appState.produtos = appState.produtos.filter(p => p.id !== id);
     appState.calculoAtivo.produtosUsados = appState.calculoAtivo.produtosUsados.filter(pu => pu.produtoId !== id);
     saveState();
@@ -567,11 +677,14 @@ function renderCalculadoraTab() {
           const custoEsteProd = pu.mlUsados * prod.custoPorMl;
           return `
             <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 flex items-center justify-between gap-2">
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-extrabold text-white truncate">${prod.nome}</p>
-                <p class="text-xs text-slate-300 font-semibold">${formatarMoeda(prod.custoPorMl)}/ml × ${pu.mlUsados}ml = <span class="text-emerald-400 font-black">${formatarMoeda(custoEsteProd)}</span></p>
+              <div class="flex items-center gap-2.5 flex-1 min-w-0">
+                <img src="${prod.foto || 'https://cdn-icons-png.flaticon.com/512/2972/2972531.png'}" class="w-8 h-8 object-contain shrink-0">
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-extrabold text-white truncate">${prod.nome}</p>
+                  <p class="text-xs text-slate-300 font-semibold">${formatarMoeda(prod.custoPorMl)}/ml × ${pu.mlUsados}ml = <span class="text-emerald-400 font-black">${formatarMoeda(custoEsteProd)}</span></p>
+                </div>
               </div>
-              <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-1.5 shrink-0">
                 <input type="number" value="${pu.mlUsados}" onchange="handleUpdateMlUsado(${index}, this.value)" class="w-20 bg-slate-800 border border-slate-600 rounded-xl px-2 py-1.5 text-center text-sm font-black text-white">
                 <span class="text-xs text-slate-300 font-bold">ml</span>
                 <button onclick="handleRemoveProdutoDoCalculo(${index})" class="p-1.5 text-slate-400 hover:text-rose-400 ml-1 font-bold text-base">✕</button>
@@ -766,7 +879,7 @@ function renderOrcamentosTab() {
         </p>
       </div>
 
-      <!-- Form de Orçamento com Fontes Grandes -->
+      <!-- Form de Orçamento -->
       <form onsubmit="handleSalvarOrcamento(event)" class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-4">
         <div>
           <label class="block text-sm font-extrabold text-slate-200 mb-1">Nome do Cliente *</label>
@@ -832,7 +945,7 @@ function renderOrcamentosTab() {
           <input type="file" id="o_foto" accept="image/*" onchange="previewFotoOrcamento(event)"
                  class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-sky-600 file:text-white">
           <div id="foto_preview_container" class="mt-2 hidden">
-            <img id="foto_preview_img" class="w-full h-36 object-cover rounded-xl border border-slate-700">
+            <img id="foto_preview_img" class="w-full h-40 object-cover rounded-xl border border-slate-700">
           </div>
         </div>
 
