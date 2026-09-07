@@ -1,6 +1,6 @@
-# 🧼💰 VPB HigiLucro - Aplicativo de Higienização & Cálculo de Lucro
+# 🧼💰 FOCO GESTÃO - Aplicativo de Higienização & Cálculo de Lucro
 
-**VPB HigiLucro** é um aplicativo mobile progressivo (PWA) de altíssima simplicidade visual, projetado especialmente para profissionais e autônomos do ramo de higienização de estofados, colchões, artigos infantis e estética automotiva.
+**FOCO GESTÃO** é um aplicativo mobile progressivo (PWA) de altíssima simplicidade visual, projetado especialmente para profissionais e autônomos do ramo de higienização de estofados, colchões, artigos infantis e estética automotiva.
 
 ---
 
