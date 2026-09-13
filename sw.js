@@ -1,10 +1,14 @@
-const CACHE_NAME = 'vpb-higilucro-v1';
+const CACHE_NAME = 'foco-gestao-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './css/styles.css',
   './js/app.js',
-  './manifest.json'
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+  './apple-touch-icon.png',
+  './favicon.png'
 ];
 
 self.addEventListener('install', (e) => {
