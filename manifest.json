@@ -1,12 +1,15 @@
 {
+  "id": "/",
   "name": "Foco Gestão - Higienização de Estofados",
   "short_name": "Foco Gestão",
   "description": "Calculadora de Custos, Termômetro de Lucratividade, Orçamentos WhatsApp e Agenda para Profissionais de Higienização de Estofados.",
-  "start_url": "./index.html",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0284c7",
   "orientation": "portrait-primary",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icon-192.png",
