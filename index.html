@@ -193,6 +193,18 @@ let modalWhatsAppState = {
   textoEditado: ''
 };
 
+let modalAgendaState = {
+  aberto: false,
+  orcamentoId: null,
+  clienteNome: '',
+  clienteTelefone: '',
+  clienteEndereco: '',
+  objeto: '',
+  valor: 0,
+  dataVal: '',
+  horaVal: ''
+};
+
 function formatarMoeda(valor) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
     .format(valor || 0)
@@ -210,8 +222,21 @@ function parseValorNum(val) {
 
 function formatarData(dataIso) {
   if (!dataIso) return '';
-  const d = new Date(dataIso);
-  return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  try {
+    const parts = dataIso.split('T');
+    if (parts.length === 2) {
+      const [year, month, day] = parts[0].split('-');
+      const [hour, minute] = parts[1].split(':');
+      if (year && month && day && hour && minute) {
+        return `${day}/${month}/${year} às ${hour}:${minute}`;
+      }
+    }
+    const d = new Date(dataIso);
+    if (!isNaN(d.getTime())) {
+      return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    }
+  } catch (e) {}
+  return dataIso;
 }
 
 // Inicialização Robusta da Aplicação
