@@ -769,17 +769,22 @@ function renderCalculadoraTab() {
     }
   });
 
-  const custoOperacional = (calc.custoLocomocao || 0) +
-                           (calc.custoMaquinario || 0) +
-                           ((calc.horasTrabalho || 0) * (calc.valorHora || 0)) +
-                           (calc.custoAlimentacao || 0) +
-                           (calc.custosExtras || 0);
+  const valorMaoDeObra = ((calc.horasTrabalho || 0) * (calc.valorHora || 0));
 
-  const custoTotal = custoQuimicos + custoOperacional;
+  const custoOperacionalOutros = (calc.custoLocomocao || 0) +
+                                 (calc.custoMaquinario || 0) +
+                                 (calc.custoAlimentacao || 0) +
+                                 (calc.custosExtras || 0);
 
-  let precoFinalCobrar = calc.precoCobradoPersonalizado !== null ? calc.precoCobradoPersonalizado : (custoTotal * (1 + (calc.margemSelecionada / 100)));
-  let lucroLiquido = precoFinalCobrar - custoTotal;
-  let margemPorcentagem = custoTotal > 0 ? (lucroLiquido / custoTotal) * 100 : 0;
+  // Despesas Reais (Sem subtrair o valor da sua hora do lucro)
+  const custoDespesasReais = custoQuimicos + custoOperacionalOutros;
+  const custoTotalComHora = custoDespesasReais + valorMaoDeObra;
+
+  let precoFinalCobrar = calc.precoCobradoPersonalizado !== null ? calc.precoCobradoPersonalizado : (custoTotalComHora * (1 + (calc.margemSelecionada / 100)));
+  
+  // Lucro Líquido = Cobrado menos Despesas Reais (A sua hora FICA COM VOCÊ e não subtrai do lucro)
+  let lucroLiquido = precoFinalCobrar - custoDespesasReais;
+  let margemPorcentagem = custoDespesasReais > 0 ? (lucroLiquido / custoDespesasReais) * 100 : 0;
 
   // Avaliação do Termômetro de Lucratividade
   let diagnosticoLucro = {
@@ -875,8 +880,8 @@ function renderCalculadoraTab() {
       <!-- Passo 3: Custos Adicionais Simples -->
       <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-3">
         <div class="flex items-center justify-between">
-          <label class="block text-sm font-black uppercase tracking-wider text-sky-400">3. Outras Despesas (Locomoção, Hora, Máquina)</label>
-          <span class="text-sm font-black text-emerald-400">Subtotal: ${formatarMoeda(custoOperacional)}</span>
+          <label class="block text-sm font-black uppercase tracking-wider text-sky-400">3. Outras Despesas & Sua Hora</label>
+          <span class="text-sm font-black text-emerald-400">Despesas: ${formatarMoeda(custoOperacionalOutros)}</span>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -911,12 +916,12 @@ function renderCalculadoraTab() {
       <div class="bg-gradient-to-b from-slate-800 to-slate-900 p-4 rounded-2xl border-2 border-emerald-500 shadow-2xl space-y-4">
         <div class="flex items-center justify-between border-b border-slate-700 pb-3">
           <div>
-            <span class="text-xs font-bold text-slate-400 uppercase">Custo Total Exato</span>
-            <p class="text-3xl font-black text-rose-400">${formatarMoeda(custoTotal)}</p>
+            <span class="text-xs font-bold text-slate-400 uppercase">Despesas Reais (Produtos + Gasolina)</span>
+            <p class="text-3xl font-black text-rose-400">${formatarMoeda(custoDespesasReais)}</p>
           </div>
           <div class="text-right">
-            <span class="text-xs font-bold text-slate-400 uppercase">Químicos + Operacional</span>
-            <p class="text-sm text-slate-200 font-bold">${formatarMoeda(custoQuimicos)} + ${formatarMoeda(custoOperacional)}</p>
+            <span class="text-xs font-bold text-slate-400 uppercase">Sua Hora (${calc.horasTrabalho || 0}h)</span>
+            <p class="text-sm text-sky-400 font-extrabold">${formatarMoeda(valorMaoDeObra)}</p>
           </div>
         </div>
 
@@ -951,7 +956,7 @@ function renderCalculadoraTab() {
         <div class="bg-emerald-500/15 border border-emerald-500/40 p-4 rounded-xl flex items-center justify-between">
           <div>
             <p class="text-xs text-emerald-400 font-black uppercase tracking-wider">Lucro Líquido no Bolso</p>
-            <p class="text-xs text-slate-300 font-semibold">Cobrado (${formatarMoeda(precoFinalCobrar)}) - Custo (${formatarMoeda(custoTotal)})</p>
+            <p class="text-xs text-slate-300 font-semibold">Cobrado (${formatarMoeda(precoFinalCobrar)}) - Despesas (${formatarMoeda(custoDespesasReais)})</p>
           </div>
           <span class="text-3xl font-black text-emerald-400">${formatarMoeda(lucroLiquido)}</span>
         </div>
