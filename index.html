@@ -200,6 +200,14 @@ function formatarMoeda(valor) {
     .replace(/\s+/g, ' ');
 }
 
+function parseValorNum(val) {
+  if (typeof val === 'number') return isNaN(val) ? 0 : val;
+  if (!val) return 0;
+  const str = val.toString().replace('R$', '').replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
+  const num = parseFloat(str);
+  return isNaN(num) ? 0 : num;
+}
+
 function formatarData(dataIso) {
   if (!dataIso) return '';
   const d = new Date(dataIso);
@@ -1042,34 +1050,41 @@ function renderOrcamentosTab() {
       <form onsubmit="handleSalvarOrcamento(event)" class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-lg space-y-4">
         <div>
           <label class="block text-sm font-extrabold text-slate-200 mb-1">Nome do Cliente *</label>
-          <input type="text" id="o_cliente" placeholder="Ex: Maria Santos" required
+          <input type="text" id="o_cliente" value="${preenchido.clienteNome || ''}" placeholder="Ex: Maria Santos" required
                  class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-sm font-extrabold text-slate-200 mb-1">WhatsApp (DDD) *</label>
-            <input type="tel" id="o_telefone" placeholder="Ex: 11999998888" required
+            <input type="tel" id="o_telefone" value="${preenchido.clienteTelefone || ''}" placeholder="Ex: 11999998888" required
                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
           </div>
           <div>
             <label class="block text-sm font-extrabold text-slate-200 mb-1">Valor Total (R$) *</label>
-            <input type="number" step="0.01" id="o_valor" value="${preenchido.valorOrcamento || ''}" placeholder="Ex: 220.00" required
+            <input type="text" id="o_valor" value="${preenchido.valorOrcamento || ''}" placeholder="Ex: 220,00" required
                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-emerald-400 font-black text-base">
           </div>
         </div>
 
-        <div>
-          <label class="block text-sm font-extrabold text-slate-200 mb-1">Endereço do Cliente</label>
-          <input type="text" id="o_endereco" placeholder="Ex: Rua das Flores, 123 - Bairro Centro"
-                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Endereço (Opcional)</label>
+            <input type="text" id="o_endereco" value="${preenchido.clienteEndereco || ''}" placeholder="Ex: Rua Flores, 123"
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
+          </div>
+          <div>
+            <label class="block text-sm font-extrabold text-slate-200 mb-1">Desconto (Opcional)</label>
+            <input type="text" id="o_desconto" value="${preenchido.desconto || ''}" placeholder="Ex: R$ 20,00 ou 10%"
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-amber-300 font-bold text-base">
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-sm font-extrabold text-slate-200 mb-1">Tipo do Objeto</label>
             <select id="o_item" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-white font-bold text-sm">
-              <option ${preenchido.itemTipo === 'Sofá 3 Lugares' ? 'selected' : ''}>Sofá Retrátil 3 Lugares</option>
+              <option ${preenchido.itemTipo === 'Sofá 3 Lugares' || preenchido.itemTipo === 'Sofá Retrátil 3 Lugares' ? 'selected' : ''}>Sofá Retrátil 3 Lugares</option>
               <option ${preenchido.itemTipo === 'Sofá 2 Lugares' ? 'selected' : ''}>Sofá 2 Lugares</option>
               <option ${preenchido.itemTipo === 'Colchão Casal' ? 'selected' : ''}>Colchão Casal / Queen</option>
               <option ${preenchido.itemTipo === 'Banco Automotivo' ? 'selected' : ''}>Higienização Automotiva Completa</option>
@@ -1094,7 +1109,7 @@ function renderOrcamentosTab() {
 
         <div>
           <label class="block text-sm font-extrabold text-slate-200 mb-1">Metragem / Tamanho / Detalhes</label>
-          <input type="text" id="o_metragem" placeholder="Ex: 2,40 metros / 3 assentos retráteis"
+          <input type="text" id="o_metragem" value="${preenchido.metragem || ''}" placeholder="Ex: 2,40 metros / 3 assentos retráteis"
                  class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-bold text-base">
         </div>
 
@@ -1136,6 +1151,7 @@ function renderOrcamentosTab() {
             <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 text-sm space-y-1 text-slate-200 font-medium">
               <p>🛋️ <strong>Objeto:</strong> ${o.itemTipo} (${o.tecido || 'Tecido Padrão'})</p>
               ${o.metragem ? `<p>📐 <strong>Detalhes:</strong> ${o.metragem}</p>` : ''}
+              ${o.desconto ? `<p>🏷️ <strong>Desconto:</strong> ${o.desconto}</p>` : ''}
             </div>
 
             ${o.fotoUrl ? `
@@ -1186,16 +1202,43 @@ function previewFotoOrcamento(e) {
 }
 
 function handleSalvarOrcamento(e) {
-  e.preventDefault();
-  const clienteNome = document.getElementById('o_cliente').value.trim();
-  const clienteTelefone = document.getElementById('o_telefone').value.trim();
-  const clienteEndereco = document.getElementById('o_endereco').value.trim();
-  const itemTipo = document.getElementById('o_item').value;
-  const tecido = document.getElementById('o_tecido').value;
-  const metragem = document.getElementById('o_metragem').value.trim();
-  const valorOrcamento = parseFloat(document.getElementById('o_valor').value);
+  if (e) e.preventDefault();
+  
+  const clienteNomeEl = document.getElementById('o_cliente');
+  const clienteTelefoneEl = document.getElementById('o_telefone');
+  const clienteEnderecoEl = document.getElementById('o_endereco');
+  const itemTipoEl = document.getElementById('o_item');
+  const tecidoEl = document.getElementById('o_tecido');
+  const metragemEl = document.getElementById('o_metragem');
+  const descontoEl = document.getElementById('o_desconto');
+  const valorEl = document.getElementById('o_valor');
 
-  if (!clienteNome || !clienteTelefone || isNaN(valorOrcamento)) return;
+  const clienteNome = clienteNomeEl ? clienteNomeEl.value.trim() : '';
+  const clienteTelefone = clienteTelefoneEl ? clienteTelefoneEl.value.trim() : '';
+  const clienteEndereco = clienteEnderecoEl ? clienteEnderecoEl.value.trim() : '';
+  const itemTipo = itemTipoEl ? itemTipoEl.value : 'Sofá Retrátil 3 Lugares';
+  const tecido = tecidoEl ? tecidoEl.value : 'Suede';
+  const metragem = metragemEl ? metragemEl.value.trim() : '';
+  const desconto = descontoEl ? descontoEl.value.trim() : '';
+  const valorOrcamento = parseValorNum(valorEl ? valorEl.value : 0);
+
+  if (!clienteNome) {
+    alert('Por favor, digite o Nome do Cliente.');
+    if (clienteNomeEl) clienteNomeEl.focus();
+    return;
+  }
+
+  if (!clienteTelefone) {
+    alert('Por favor, digite o número do WhatsApp do cliente.');
+    if (clienteTelefoneEl) clienteTelefoneEl.focus();
+    return;
+  }
+
+  if (valorOrcamento <= 0) {
+    alert('Por favor, informe o Valor Total do orçamento (Ex: 220,00).');
+    if (valorEl) valorEl.focus();
+    return;
+  }
 
   const novoOrc = {
     id: 'o_' + Date.now(),
@@ -1205,6 +1248,7 @@ function handleSalvarOrcamento(e) {
     itemTipo,
     tecido,
     metragem,
+    desconto,
     fotoUrl: tempFotoBase64 || '',
     valorOrcamento,
     dataCriacao: new Date().toISOString()
@@ -1231,6 +1275,7 @@ function handleEnviarWhatsApp(id) {
   let itemTipo = limparSanitizarTexto(orc.itemTipo || '');
   let tecido = limparSanitizarTexto(orc.tecido || 'Suede / Padrão');
   let metragem = limparSanitizarTexto(orc.metragem || '');
+  let desconto = limparSanitizarTexto(orc.desconto || '');
   let valorStr = formatarMoeda(orc.valorOrcamento);
 
   let texto = `Olá *${clienteNome}*! 🧼✨\n\n`;
@@ -1239,8 +1284,9 @@ function handleEnviarWhatsApp(id) {
   texto += `🛋️ *Item:* ${itemTipo}\n`;
   texto += `🧵 *Tecido:* ${tecido}\n`;
   if (metragem) texto += `📐 *Tamanho/Obs:* ${metragem}\n`;
-  texto += `💰 *Investimento Especial:* ${valorStr}\n\n`;
-  texto += `✨ *Incluso no Serviço:*\n`;
+  texto += `💰 *Investimento Especial:* ${valorStr}\n`;
+  if (desconto) texto += `🏷️ *Desconto Especial:* ${desconto}\n`;
+  texto += `\n✨ *Incluso no Serviço:*\n`;
   texto += `✅ Extração profunda de sujeira encardida\n`;
   texto += `✅ Eliminação de até 99,9% de ácaros, fungos e bactérias\n`;
   texto += `✅ Aplicação de sanitizante e perfume finalizador\n\n`;
