@@ -198,7 +198,7 @@ function switchTab(tabName) {
 }
 
 // ----------------------------------------------------
-// TELA DE ATIVAÇÃO DE LICENÇA (KIWIFY / CHAVE VIP)
+// TELA DE ATIVAÇÃO DE LICENÇA (E-MAIL DO COMPRADOR)
 // ----------------------------------------------------
 function renderTelaAtivacaoLicenca() {
   return `
@@ -211,24 +211,24 @@ function renderTelaAtivacaoLicenca() {
             </svg>
           </div>
           <h1 class="text-2xl font-black text-white">Foco Gestão</h1>
-          <p class="text-xs text-sky-400 font-bold uppercase tracking-wider">Ativação da Licença de Uso</p>
-          <p class="text-sm text-slate-300 font-medium leading-relaxed">Digite o seu e-mail de compra ou sua chave de acesso para liberar o aplicativo:</p>
+          <p class="text-xs text-sky-400 font-bold uppercase tracking-wider">Ativação de Licença de Uso</p>
+          <p class="text-sm text-slate-300 font-medium leading-relaxed">Digite o e-mail cadastrado na sua compra para liberar o seu acesso exclusivo ao aplicativo:</p>
         </div>
 
         <form onsubmit="handleAtivarLicenca(event)" class="space-y-4">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">E-mail do Comprador ou Chave VIP *</label>
-            <input type="text" id="licenca_input" placeholder="Ex: seuemail@gmail.com ou FOCO2026VIP" required
+            <label class="block text-xs font-bold text-slate-300 mb-1">E-mail do Comprador *</label>
+            <input type="email" id="licenca_input" placeholder="Ex: seuemail@gmail.com" required
                    class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-white font-bold text-base focus:border-sky-500 focus:outline-none">
           </div>
 
           <button type="submit" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-black py-4 px-4 rounded-2xl shadow-xl shadow-sky-500/20 text-sm uppercase tracking-wider transition active:scale-95">
-            🔑 Liberar Acesso ao App
+            🔓 Liberar Acesso ao App
           </button>
         </form>
 
         <div class="text-center pt-2">
-          <p class="text-xs text-slate-400 font-semibold">Licença vitalícia vinculada ao seu e-mail.</p>
+          <p class="text-xs text-slate-400 font-semibold">Licença vitalícia e individual por comprador.</p>
         </div>
       </div>
     </div>
@@ -238,14 +238,14 @@ function renderTelaAtivacaoLicenca() {
 function handleAtivarLicenca(e) {
   if (e) e.preventDefault();
   const input = document.getElementById('licenca_input')?.value?.trim()?.toLowerCase();
-  const chavesValidas = ['foco2026vip', 'focopro', 'licenca2026', 'focovip'];
+  const chavesSecretas = ['foco2026vip', 'focopro', 'licenca2026', 'focovip'];
   
-  if (input && (chavesValidas.includes(input) || input.includes('@') || input.length >= 4)) {
+  if (input && (input.includes('@') || chavesSecretas.includes(input))) {
     localStorage.setItem('FOCO_GESTAO_LICENCA_ATIVADA', 'true');
     localStorage.setItem('FOCO_GESTAO_EMAIL_LICENCA', input);
     renderApp();
   } else {
-    alert('⚠️ Por favor, digite um e-mail válido ou chave de licença.');
+    alert('⚠️ Por favor, digite um e-mail válido.');
   }
 }
 
