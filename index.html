@@ -1427,6 +1427,14 @@ function confirmResetApp() {
   }
 }
 
+// Inicializar aplicativo
+document.addEventListener('DOMContentLoaded', renderApp);
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  renderApp();
+} else {
+  renderApp();
+}
+
   </script>
 </body>
 </html>
