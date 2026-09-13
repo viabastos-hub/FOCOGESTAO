@@ -1,7 +1,7 @@
 {
-  "name": "Foco Gestao - Higienizacao de Estofados",
-  "short_name": "Foco Gestao",
-  "description": "Calculadora de Custos, OrÃ§amentos WhatsApp e Agenda para Profissionais de HigienizaÃ§Ã£o de Estofados.",
+  "name": "Foco Gestão - Higienização de Estofados",
+  "short_name": "Foco Gestão",
+  "description": "Calculadora de Custos, Termômetro de Lucratividade, Orçamentos WhatsApp e Agenda para Profissionais de Higienização de Estofados.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",

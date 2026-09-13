@@ -1,5 +1,6 @@
-# 🧼💰 FOCO GESTÃO - Aplicativo de Higienização & Cálculo de Lucro
+# 🧼💰 Foco Gestão - Aplicativo de Higienização & Cálculo de Lucro
 
+**Foco Gestão** é um aplicativo mobile progressivo (PWA) de altíssima simplicidade visual, projetado especialmente para profissionais e autônomos do ramo de higienização de estofados, colchões, artigos infantis e estética automotiva.
 
 ---
 
