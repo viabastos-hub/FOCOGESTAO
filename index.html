@@ -62,7 +62,7 @@ const defaultState = {
   activeTab: 'calculadora', // 'produtos', 'calculadora', 'orcamentos', 'agenda', 'dicas'
   usuario: {
     logado: true,
-    nome: 'Foco GestÃ£o',
+    nome: 'Foco Gestão',
     documento: '', // CPF ou CNPJ (Opcional)
     telefone: ''
   },
@@ -123,6 +123,26 @@ const defaultState = {
 // Gerenciador de Estado Local
 let appState = loadState();
 
+function limparSanitizarTexto(str) {
+  if (!str) return '';
+  return str
+    .replace(/&amp;227;/gi, 'ã')
+    .replace(/&amp;227/gi, 'ã')
+    .replace(/&227;/gi, 'ã')
+    .replace(/&227/gi, 'ã')
+    .replace(/&#227;/gi, 'ã')
+    .replace(/&#227/gi, 'ã')
+    .replace(/Ã£/g, 'ã')
+    .replace(/Ãƒ/g, 'Ã')
+    .replace(/Ã¡/g, 'á')
+    .replace(/Ã©/g, 'é')
+    .replace(/Ã³/g, 'ó')
+    .replace(/Ãº/g, 'ú')
+    .replace(/Ã§/g, 'ç')
+    .replace(/ǜ/g, 'ã')
+    .replace(/ǟ/g, 'Ã');
+}
+
 function loadState() {
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -136,12 +156,17 @@ function loadState() {
             stateProds.push({ ...baseP });
           }
         });
+        let stateUser = { ...defaultState.usuario, ...(parsed.usuario || {}), logado: true };
+        if (stateUser.nome) {
+          stateUser.nome = limparSanitizarTexto(stateUser.nome);
+          if (stateUser.nome.includes('227')) stateUser.nome = 'Foco Gestão';
+        }
         return {
           ...defaultState,
           ...parsed,
           produtos: stateProds,
           agenda: parsed.agenda || defaultState.agenda,
-          usuario: { ...defaultState.usuario, ...(parsed.usuario || {}), logado: true }
+          usuario: stateUser
         };
       }
     }
@@ -1199,12 +1224,13 @@ function handleEnviarWhatsApp(id) {
   const foneLimpo = (orc.clienteTelefone || '').replace(/\D/g, '');
   
   let empresaNome = appState.usuario && appState.usuario.nome ? appState.usuario.nome : 'Foco Gestão';
-  empresaNome = empresaNome.replace(/Ã£/g, 'ã').replace(/Ãƒ/g, 'Ã');
+  empresaNome = limparSanitizarTexto(empresaNome);
+  if (!empresaNome || empresaNome.includes('227')) empresaNome = 'Foco Gestão';
   
-  let clienteNome = (orc.clienteNome || '').replace(/Ã£/g, 'ã').replace(/Ãƒ/g, 'Ã');
-  let itemTipo = (orc.itemTipo || '').replace(/Ã£/g, 'ã').replace(/Ãƒ/g, 'Ã');
-  let tecido = (orc.tecido || 'Suede / Padrão').replace(/Ã£/g, 'ã').replace(/Ãƒ/g, 'Ã');
-  let metragem = (orc.metragem || '').replace(/Ã£/g, 'ã').replace(/Ãƒ/g, 'Ã');
+  let clienteNome = limparSanitizarTexto(orc.clienteNome || '');
+  let itemTipo = limparSanitizarTexto(orc.itemTipo || '');
+  let tecido = limparSanitizarTexto(orc.tecido || 'Suede / Padrão');
+  let metragem = limparSanitizarTexto(orc.metragem || '');
   let valorStr = formatarMoeda(orc.valorOrcamento);
 
   let texto = `Olá *${clienteNome}*! 🧼✨\n\n`;
