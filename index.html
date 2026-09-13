@@ -850,30 +850,39 @@ function renderCalculadoraTab() {
           return `
             <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 flex items-center justify-between gap-2">
               <div class="flex items-center gap-2.5 flex-1 min-w-0">
-                
                 <div class="min-w-0 flex-1">
                   <p class="text-sm font-extrabold text-white truncate">${prod.nome}</p>
                   <p class="text-xs text-slate-300 font-semibold">${formatarMoeda(prod.custoPorMl)}/ml × ${pu.mlUsados}ml = <span class="text-emerald-400 font-black">${formatarMoeda(custoEsteProd)}</span></p>
                 </div>
               </div>
-              <div class="flex items-center gap-1.5 shrink-0">
-                <input type="number" value="${pu.mlUsados}" onchange="handleUpdateMlUsado(${index}, this.value)" class="w-20 bg-slate-800 border border-slate-600 rounded-xl px-2 py-1.5 text-center text-sm font-black text-white">
-                <span class="text-xs text-slate-300 font-bold">ml</span>
-                <button onclick="handleRemoveProdutoDoCalculo(${index})" class="p-1.5 text-slate-400 hover:text-rose-400 ml-1 font-bold text-base">✕</button>
+              <div class="flex items-center gap-1 shrink-0">
+                <button onclick="handleAlterarMlUsado(${index}, -25)" class="w-7 h-8 bg-slate-800 hover:bg-slate-700 text-slate-200 font-black rounded-lg border border-slate-600 flex items-center justify-center text-sm active:scale-95" title="Diminuir 25ml">-</button>
+                <input type="number" inputmode="numeric" value="${pu.mlUsados}" oninput="handleUpdateMlUsado(${index}, this.value)" onchange="renderApp()" class="w-16 bg-slate-800 border border-slate-600 rounded-lg px-1 py-1.5 text-center text-sm font-black text-white focus:outline-none focus:border-sky-500">
+                <button onclick="handleAlterarMlUsado(${index}, 25)" class="w-7 h-8 bg-slate-800 hover:bg-slate-700 text-slate-200 font-black rounded-lg border border-slate-600 flex items-center justify-center text-sm active:scale-95" title="Aumentar 25ml">+</button>
+                <span class="text-xs text-slate-300 font-bold ml-0.5">ml</span>
+                <button onclick="handleRemoveProdutoDoCalculo(${index})" class="p-1.5 text-slate-400 hover:text-rose-400 ml-1 font-bold text-base" title="Remover produto">✕</button>
               </div>
             </div>
           `;
         }).join('')}
 
-        <!-- Seletor para Adicionar Produto -->
-        <div class="flex gap-2 pt-1">
-          <select id="select_add_produto" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-xs font-bold text-white">
+        <!-- Seletor para Adicionar Produto com Quantidade Integrada -->
+        <div class="flex flex-col sm:flex-row gap-2 pt-1">
+          <select id="select_add_produto" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-xs font-bold text-white min-w-0">
             <option value="">+ Selecionar outro produto do estoque...</option>
             ${appState.produtos.map(p => `<option value="${p.id}">${p.nome} (${formatarMoeda(p.custoPorMl)}/ml)</option>`).join('')}
           </select>
-          <button onclick="handleAddProdutoAoCalculo()" class="bg-sky-600 hover:bg-sky-500 text-white font-black text-xs px-4 py-3 rounded-xl shadow-lg">
-            Incluir
-          </button>
+          <div class="flex items-center gap-1.5 justify-end">
+            <div class="flex items-center gap-1 bg-slate-900 border border-slate-700 rounded-xl px-2 py-1.5">
+              <label for="input_add_ml" class="text-xs text-slate-300 font-bold">Qtd:</label>
+              <input type="number" inputmode="numeric" id="input_add_ml" placeholder="ml" value="100" min="1" step="10"
+                     class="w-16 bg-slate-800 border border-slate-700 rounded-lg px-1 py-1 text-center text-xs font-black text-white focus:outline-none focus:border-sky-500">
+              <span class="text-xs text-slate-300 font-bold">ml</span>
+            </div>
+            <button onclick="handleAddProdutoAoCalculo()" class="bg-sky-600 hover:bg-sky-500 text-white font-black text-xs px-4 py-3 rounded-xl shadow-lg shrink-0 active:scale-95">
+              + Incluir
+            </button>
+          </div>
         </div>
       </div>
 
@@ -978,22 +987,45 @@ function handleSelectTipoServico(tipo) {
 
 function handleAddProdutoAoCalculo() {
   const select = document.getElementById('select_add_produto');
-  const id = select.value;
-  if (!id) return;
+  const mlInput = document.getElementById('input_add_ml');
+  const id = select ? select.value : '';
+  if (!id) {
+    alert('Por favor, selecione um produto na lista antes de incluir.');
+    return;
+  }
+
+  const ml = parseFloat(mlInput ? mlInput.value : 100) || 100;
 
   const existente = appState.calculoAtivo.produtosUsados.find(pu => pu.produtoId === id);
-  if (!existente) {
-    appState.calculoAtivo.produtosUsados.push({ produtoId: id, mlUsados: 100 });
-    saveState();
-    renderApp();
+  if (existente) {
+    existente.mlUsados = ml;
+  } else {
+    appState.calculoAtivo.produtosUsados.push({ produtoId: id, mlUsados: ml });
   }
+
+  saveState();
+  renderApp();
+}
+
+function handleAlterarMlUsado(index, delta) {
+  const pu = appState.calculoAtivo.produtosUsados[index];
+  if (!pu) return;
+  const novoMl = Math.max(0, (pu.mlUsados || 0) + delta);
+  if (novoMl === 0) {
+    appState.calculoAtivo.produtosUsados.splice(index, 1);
+  } else {
+    pu.mlUsados = novoMl;
+  }
+  saveState();
+  renderApp();
 }
 
 function handleUpdateMlUsado(index, val) {
   const num = parseFloat(val) || 0;
-  appState.calculoAtivo.produtosUsados[index].mlUsados = num;
-  saveState();
-  renderApp();
+  if (appState.calculoAtivo.produtosUsados[index]) {
+    appState.calculoAtivo.produtosUsados[index].mlUsados = num;
+    saveState();
+  }
 }
 
 function handleRemoveProdutoDoCalculo(index) {
