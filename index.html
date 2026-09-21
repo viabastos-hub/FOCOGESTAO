@@ -1033,6 +1033,10 @@ function renderCalculadoraTab() {
               <input type="tel" id="calc_cliente_telefone" placeholder="Ex: 11999998888" value="${calc.clienteTelefone || ''}" onchange="handleUpdateCalcField('clienteTelefone', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold">
             </div>
           </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 mb-1">Endereço (Opcional - para GPS Waze)</label>
+            <input type="text" id="calc_cliente_endereco" placeholder="Ex: Rua Flores, 123 - Apto 4" value="${calc.clienteEndereco || ''}" onchange="handleUpdateCalcField('clienteEndereco', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold">
+          </div>
         </div>
 
         <!-- BOTÕES DE AÇÃO DIRETA NA PRIMEIRA TELA -->
@@ -1137,8 +1141,10 @@ function handleSetPrecoPersonalizado(val) {
 function handleEnviarWhatsAppDiretoDaCalculadora(valorCalculado) {
   const cNomeEl = document.getElementById('calc_cliente_nome');
   const cFoneEl = document.getElementById('calc_cliente_telefone');
+  const cEndEl = document.getElementById('calc_cliente_endereco');
   let clienteNome = cNomeEl ? cNomeEl.value.trim() : (appState.calculoAtivo.clienteNome || '');
   let clienteTelefone = cFoneEl ? cFoneEl.value.trim() : (appState.calculoAtivo.clienteTelefone || '');
+  let clienteEndereco = cEndEl ? cEndEl.value.trim() : (appState.calculoAtivo.clienteEndereco || '');
 
   if (!clienteNome) {
     clienteNome = prompt('Digite o Nome do Cliente para enviar no WhatsApp:', 'Cliente') || 'Cliente';
@@ -1149,7 +1155,7 @@ function handleEnviarWhatsAppDiretoDaCalculadora(valorCalculado) {
     id: 'o_' + Date.now(),
     clienteNome,
     clienteTelefone,
-    clienteEndereco: '',
+    clienteEndereco,
     itemTipo: appState.calculoAtivo.itemServico || 'Higienização de Estofado',
     tecido: 'Suede / Padrão',
     metragem: '',
@@ -1167,8 +1173,10 @@ function handleEnviarWhatsAppDiretoDaCalculadora(valorCalculado) {
 function handleAgendarDiretoDaCalculadora(valorCalculado) {
   const cNomeEl = document.getElementById('calc_cliente_nome');
   const cFoneEl = document.getElementById('calc_cliente_telefone');
+  const cEndEl = document.getElementById('calc_cliente_endereco');
   let clienteNome = cNomeEl ? cNomeEl.value.trim() : (appState.calculoAtivo.clienteNome || '');
   let clienteTelefone = cFoneEl ? cFoneEl.value.trim() : (appState.calculoAtivo.clienteTelefone || '');
+  let clienteEndereco = cEndEl ? cEndEl.value.trim() : (appState.calculoAtivo.clienteEndereco || '');
 
   if (!clienteNome) {
     clienteNome = prompt('Digite o Nome do Cliente para agendar:', 'Cliente') || 'Cliente';
@@ -1182,7 +1190,7 @@ function handleAgendarDiretoDaCalculadora(valorCalculado) {
     orcamentoId: null,
     clienteNome: clienteNome,
     clienteTelefone: clienteTelefone,
-    clienteEndereco: '',
+    clienteEndereco: clienteEndereco,
     objeto: `${appState.calculoAtivo.itemServico || 'Higienização'}`,
     valor: valorFinal,
     dataVal: dataAmanha,
@@ -1662,10 +1670,17 @@ function renderAgendaTab() {
               </span>
             </div>
 
-            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 text-sm space-y-1.5 text-slate-200 font-medium">
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 text-sm space-y-2 text-slate-200 font-medium">
               <p>🛋️ <strong>Serviço:</strong> ${a.objeto}</p>
               <p>💰 <strong>Valor Cotado:</strong> <span class="text-emerald-400 font-black text-base">${formatarMoeda(a.valor)}</span></p>
-              ${a.clienteEndereco ? `<p>📍 <strong>Endereço:</strong> ${a.clienteEndereco}</p>` : ''}
+              <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-800">
+                <p class="text-xs text-slate-300 flex-1 truncate">
+                  📍 <strong>Endereço:</strong> ${a.clienteEndereco ? a.clienteEndereco : '<span class="italic text-slate-400 font-normal">Nenhum endereço informado</span>'}
+                </p>
+                <button onclick="handleEditarEnderecoAgenda('${a.id}')" class="px-2.5 py-1 text-[11px] font-black text-sky-300 bg-sky-500/20 hover:bg-sky-500/30 rounded-lg border border-sky-500/40 shrink-0 active:scale-95" title="Editar ou Adicionar Endereço do Cliente">
+                  ✏️ ${a.clienteEndereco ? 'Editar' : '+ Endereço'}
+                </button>
+              </div>
             </div>
 
             <!-- BOTÕES PRINCIPAIS DE STATUS: CONFIRMAR E DESCONSIDERAR -->
@@ -1708,6 +1723,18 @@ function handleSetStatusAgenda(id, novoStatus) {
   }
   saveState();
   renderApp();
+}
+
+function handleEditarEnderecoAgenda(id) {
+  const item = appState.agenda.find(a => a.id === id);
+  if (!item) return;
+
+  const novoEnd = prompt('Digite ou cole o Endereço Completo do cliente (Rua, Número, Bairro, Apto):', item.clienteEndereco || '');
+  if (novoEnd !== null) {
+    item.clienteEndereco = novoEnd.trim();
+    saveState();
+    renderApp();
+  }
 }
 
 function handleExcluirAgendamento(id) {
