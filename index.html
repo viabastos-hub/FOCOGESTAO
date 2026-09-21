@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -161,6 +161,25 @@ function loadState() {
           stateUser.nome = limparSanitizarTexto(stateUser.nome);
           if (stateUser.nome.includes('227')) stateUser.nome = 'Foco Gestão';
         }
+        if (parsed.orcamentos) {
+          parsed.orcamentos.forEach(o => {
+            if (o.valorOrcamento !== undefined) o.valorOrcamento = parseValorNum(o.valorOrcamento);
+          });
+        }
+        if (parsed.agenda) {
+          parsed.agenda.forEach(a => {
+            if (a.valor !== undefined) a.valor = parseValorNum(a.valor);
+          });
+        }
+        if (parsed.produtos) {
+          parsed.produtos.forEach(p => {
+            if (p.precoFrasco !== undefined) p.precoFrasco = parseValorNum(p.precoFrasco);
+            if (p.volumeMl && p.precoFrasco) p.custoPorMl = p.precoFrasco / p.volumeMl;
+          });
+        }
+        if (parsed.calculoAtivo && parsed.calculoAtivo.precoCobradoPersonalizado !== null && parsed.calculoAtivo.precoCobradoPersonalizado !== undefined) {
+          parsed.calculoAtivo.precoCobradoPersonalizado = parseValorNum(parsed.calculoAtivo.precoCobradoPersonalizado);
+        }
         return {
           ...defaultState,
           ...parsed,
@@ -205,19 +224,25 @@ let modalAgendaState = {
   horaVal: ''
 };
 
-function formatarMoeda(valor) {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
-    .format(valor || 0)
-    .replace(/\u00A0/g, ' ')
-    .replace(/\s+/g, ' ');
-}
-
 function parseValorNum(val) {
-  if (typeof val === 'number') return isNaN(val) ? 0 : val;
+  if (typeof val === 'number') return isNaN(val) ? 0 : Math.round((val + Number.EPSILON) * 100) / 100;
   if (!val) return 0;
   const str = val.toString().replace('R$', '').replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
   const num = parseFloat(str);
-  return isNaN(num) ? 0 : num;
+  return isNaN(num) ? 0 : Math.round((num + Number.EPSILON) * 100) / 100;
+}
+
+function formatarMoeda(valor) {
+  const num = parseValorNum(valor);
+  return new Intl.NumberFormat('pt-BR', { 
+    style: 'currency', 
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })
+    .format(num)
+    .replace(/\u00A0/g, ' ')
+    .replace(/\s+/g, ' ');
 }
 
 function formatarData(dataIso) {
@@ -871,7 +896,7 @@ function renderCalculadoraTab() {
         ` : calc.produtosUsados.map((pu, index) => {
           const prod = appState.produtos.find(p => p.id === pu.produtoId);
           if (!prod) return '';
-          const custoEsteProd = pu.mlUsados * prod.custoPorMl;
+          const custoEsteProd = parseValorNum(pu.mlUsados * prod.custoPorMl);
           return `
             <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 flex items-center justify-between gap-2">
               <div class="flex items-center gap-2.5 flex-1 min-w-0">
@@ -995,10 +1020,37 @@ function renderCalculadoraTab() {
           <span class="text-3xl font-black text-emerald-400">${formatarMoeda(lucroLiquido)}</span>
         </div>
 
-        <button onclick="handleCriarOrcamentoComCalculo(${precoFinalCobrar})" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-4 px-4 rounded-2xl shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-2 text-base transition active:scale-95">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-          Gerar Orçamento WhatsApp com este Valor
-        </button>
+        <!-- DADOS RÁPIDOS DO CLIENTE (OPCIONAL) -->
+        <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-700/80 space-y-2">
+          <p class="text-xs font-black uppercase text-sky-400 tracking-wider">👤 Cliente (Para enviar ou agendar direto):</p>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-300 mb-1">Nome do Cliente</label>
+              <input type="text" id="calc_cliente_nome" placeholder="Ex: Maria Santos" value="${calc.clienteNome || ''}" onchange="handleUpdateCalcField('clienteNome', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-300 mb-1">WhatsApp (DDD)</label>
+              <input type="tel" id="calc_cliente_telefone" placeholder="Ex: 11999998888" value="${calc.clienteTelefone || ''}" onchange="handleUpdateCalcField('clienteTelefone', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold">
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTÕES DE AÇÃO DIRETA NA PRIMEIRA TELA -->
+        <div class="space-y-2 pt-1">
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="handleEnviarWhatsAppDiretoDaCalculadora(${precoFinalCobrar})" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 px-3 rounded-2xl shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider transition active:scale-95">
+              💬 Enviar WhatsApp
+            </button>
+
+            <button onclick="handleAgendarDiretoDaCalculadora(${precoFinalCobrar})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3.5 px-3 rounded-2xl shadow-lg shadow-amber-500/25 flex items-center justify-center gap-1.5 text-xs uppercase tracking-wider transition active:scale-95">
+              📅 Salvar na Agenda
+            </button>
+          </div>
+
+          <button onclick="handleCriarOrcamentoComCalculo(${precoFinalCobrar})" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-3 px-3 rounded-xl border border-slate-700 flex items-center justify-center gap-2 text-xs transition">
+            📋 Salvar Detalhado na Lista de Orçamentos
+          </button>
+        </div>
       </div>
     </div>
   `;
@@ -1082,10 +1134,67 @@ function handleSetPrecoPersonalizado(val) {
   renderApp();
 }
 
+function handleEnviarWhatsAppDiretoDaCalculadora(valorCalculado) {
+  const cNomeEl = document.getElementById('calc_cliente_nome');
+  const cFoneEl = document.getElementById('calc_cliente_telefone');
+  let clienteNome = cNomeEl ? cNomeEl.value.trim() : (appState.calculoAtivo.clienteNome || '');
+  let clienteTelefone = cFoneEl ? cFoneEl.value.trim() : (appState.calculoAtivo.clienteTelefone || '');
+
+  if (!clienteNome) {
+    clienteNome = prompt('Digite o Nome do Cliente para enviar no WhatsApp:', 'Cliente') || 'Cliente';
+  }
+
+  const valorFinal = parseValorNum(valorCalculado);
+  const novoOrc = {
+    id: 'o_' + Date.now(),
+    clienteNome,
+    clienteTelefone,
+    clienteEndereco: '',
+    itemTipo: appState.calculoAtivo.itemServico || 'Higienização de Estofado',
+    tecido: 'Suede / Padrão',
+    metragem: '',
+    desconto: '',
+    fotoUrl: '',
+    valorOrcamento: valorFinal,
+    dataCriacao: new Date().toISOString()
+  };
+
+  appState.orcamentos.unshift(novoOrc);
+  saveState();
+  handleEnviarWhatsApp(novoOrc.id);
+}
+
+function handleAgendarDiretoDaCalculadora(valorCalculado) {
+  const cNomeEl = document.getElementById('calc_cliente_nome');
+  const cFoneEl = document.getElementById('calc_cliente_telefone');
+  let clienteNome = cNomeEl ? cNomeEl.value.trim() : (appState.calculoAtivo.clienteNome || '');
+  let clienteTelefone = cFoneEl ? cFoneEl.value.trim() : (appState.calculoAtivo.clienteTelefone || '');
+
+  if (!clienteNome) {
+    clienteNome = prompt('Digite o Nome do Cliente para agendar:', 'Cliente') || 'Cliente';
+  }
+
+  const valorFinal = parseValorNum(valorCalculado);
+  const dataAmanha = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+
+  modalAgendaState = {
+    aberto: true,
+    orcamentoId: null,
+    clienteNome: clienteNome,
+    clienteTelefone: clienteTelefone,
+    clienteEndereco: '',
+    objeto: `${appState.calculoAtivo.itemServico || 'Higienização'}`,
+    valor: valorFinal,
+    dataVal: dataAmanha,
+    horaVal: '09:00'
+  };
+  renderApp();
+}
+
 function handleCriarOrcamentoComCalculo(valorCalculado) {
   window.novoOrcamentoPreenchido = {
     itemTipo: appState.calculoAtivo.itemServico,
-    valorOrcamento: valorCalculado
+    valorOrcamento: parseValorNum(valorCalculado)
   };
   switchTab('orcamentos');
 }
@@ -1542,14 +1651,14 @@ function renderAgendaTab() {
         </h3>
 
         ${appState.agenda.map(a => `
-          <div class="bg-slate-800 p-4 rounded-2xl border ${a.status === 'Concluído' ? 'border-emerald-500/50 bg-emerald-950/20' : a.status === 'Cancelado' ? 'border-rose-500/40' : 'border-slate-700'} shadow-lg space-y-3">
+          <div class="bg-slate-800 p-4 rounded-2xl border ${a.status === 'Confirmado' || a.status === 'Concluído' ? 'border-emerald-500/80 bg-emerald-950/20' : a.status === 'Desconsiderado' || a.status === 'Cancelado' ? 'border-rose-500/40 opacity-75' : 'border-amber-500/40'} shadow-lg space-y-3">
             <div class="flex items-start justify-between">
               <div>
                 <span class="text-xs font-black text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/30">🗓️ ${formatarData(a.dataHora)}</span>
                 <h4 class="font-black text-white text-lg mt-1">${a.clienteNome}</h4>
               </div>
-              <span class="px-3 py-1 rounded-full text-xs font-black ${a.status === 'Concluído' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : a.status === 'Cancelado' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'}">
-                ${a.status}
+              <span class="px-3 py-1 rounded-full text-xs font-black ${a.status === 'Confirmado' || a.status === 'Concluído' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : a.status === 'Desconsiderado' || a.status === 'Cancelado' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'}">
+                ${a.status === 'Confirmado' || a.status === 'Concluído' ? '✔️ Confirmado' : a.status === 'Desconsiderado' || a.status === 'Cancelado' ? '🚫 Desconsiderado' : '⏳ Pendente'}
               </span>
             </div>
 
@@ -1559,17 +1668,26 @@ function renderAgendaTab() {
               ${a.clienteEndereco ? `<p>📍 <strong>Endereço:</strong> ${a.clienteEndereco}</p>` : ''}
             </div>
 
+            <!-- BOTÕES PRINCIPAIS DE STATUS: CONFIRMAR E DESCONSIDERAR -->
             <div class="grid grid-cols-2 gap-2">
-              <button onclick="handleAbrirWaze('${a.clienteEndereco}')" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2.5 px-2 rounded-xl text-xs flex items-center justify-center gap-1">
+              <button onclick="handleSetStatusAgenda('${a.id}', 'Confirmado')" class="py-3 px-2 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition ${a.status === 'Confirmado' || a.status === 'Concluído' ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30'} active:scale-95">
+                ✔️ Confirmar
+              </button>
+
+              <button onclick="handleSetStatusAgenda('${a.id}', 'Desconsiderado')" class="py-3 px-2 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition ${a.status === 'Desconsiderado' || a.status === 'Cancelado' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'bg-rose-500/20 text-rose-300 border border-rose-500/40 hover:bg-rose-500/30'} active:scale-95">
+                🚫 Desconsiderar
+              </button>
+            </div>
+
+            <!-- BOTÕES SECUNDÁRIOS DE ROTA, WHATSAPP E EXCLUIR -->
+            <div class="grid grid-cols-3 gap-2 pt-1 border-t border-slate-700/80">
+              <button onclick="handleAbrirWaze('${a.clienteEndereco}')" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-1.5 rounded-xl text-xs flex items-center justify-center gap-1">
                 📍 GPS / Rota
               </button>
-              <button onclick="handleChamarCliente('${a.clienteTelefone}')" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 px-2 rounded-xl text-xs flex items-center justify-center gap-1">
+              <button onclick="handleChamarCliente('${a.clienteTelefone}')" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 px-1.5 rounded-xl text-xs flex items-center justify-center gap-1">
                 💬 WhatsApp
               </button>
-              <button onclick="handleAlternarStatusAgenda('${a.id}')" class="bg-slate-900 hover:bg-slate-950 text-slate-200 border border-slate-700 font-bold py-2.5 px-2 rounded-xl text-xs flex items-center justify-center gap-1">
-                🔄 Status
-              </button>
-              <button onclick="handleExcluirAgendamento('${a.id}')" class="bg-rose-500/20 hover:bg-rose-600 text-rose-300 border border-rose-500/40 font-bold py-2.5 px-2 rounded-xl text-xs flex items-center justify-center gap-1">
+              <button onclick="handleExcluirAgendamento('${a.id}')" class="bg-slate-900 hover:bg-slate-950 text-rose-400 border border-slate-700 font-bold py-2 px-1.5 rounded-xl text-xs flex items-center justify-center gap-1">
                 🗑️ Excluir
               </button>
             </div>
@@ -1578,6 +1696,18 @@ function renderAgendaTab() {
       </div>
     </div>
   `;
+}
+
+function handleSetStatusAgenda(id, novoStatus) {
+  const item = appState.agenda.find(a => a.id === id);
+  if (!item) return;
+  if (item.status === novoStatus) {
+    item.status = 'Pendente';
+  } else {
+    item.status = novoStatus;
+  }
+  saveState();
+  renderApp();
 }
 
 function handleExcluirAgendamento(id) {
