@@ -997,7 +997,7 @@ function renderCalculadoraTab() {
 
         <div>
           <label class="block text-sm font-extrabold text-slate-300 mb-1">Ou Digite Quanto Deseja Cobrar do Cliente (R$):</label>
-          <input type="number" step="5" placeholder="Ex: 220.00" value="${calc.precoCobradoPersonalizado !== null ? calc.precoCobradoPersonalizado : ''}" onchange="handleSetPrecoPersonalizado(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3.5 text-2xl font-black text-emerald-400">
+          <input type="number" step="0.50" placeholder="Ex: 220.00" value="${calc.precoCobradoPersonalizado !== null ? parseValorNum(calc.precoCobradoPersonalizado).toFixed(2) : ''}" onchange="handleSetPrecoPersonalizado(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3.5 text-2xl font-black text-emerald-400">
         </div>
 
         <!-- TERMÔMETRO DE LUCRATIVIDADE -->
@@ -1233,7 +1233,7 @@ function renderOrcamentosTab() {
           </div>
           <div>
             <label class="block text-sm font-extrabold text-slate-200 mb-1">Valor Total (R$) *</label>
-            <input type="text" id="o_valor" value="${preenchido.valorOrcamento || ''}" placeholder="Ex: 220,00" required
+            <input type="text" id="o_valor" value="${preenchido.valorOrcamento !== undefined && preenchido.valorOrcamento !== null && preenchido.valorOrcamento !== '' ? parseValorNum(preenchido.valorOrcamento).toFixed(2).replace('.', ',') : ''}" placeholder="Ex: 220,00" required
                    class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-3 text-emerald-400 font-black text-base">
           </div>
         </div>
